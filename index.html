@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Love You, Safa ❤️</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:wght@300;400;500;600&family=Amiri:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 1000;
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(25px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .nav-logo {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        .nav-item {
+            position: relative;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 15px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .nav-link.active {
+            background: rgba(233, 30, 99, 0.3);
+            border: 1px solid rgba(233, 30, 99, 0.5);
+        }
+        
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+        
+        .nav-toggle span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+        
+        /* Modern glassmorphism effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: float-particle 8s infinite linear;
+        }
+        
+        @keyframes float-particle {
+            0% {
+                transform: translateY(100vh) translateX(0px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Floating hearts animation */
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        .heart {
+            position: absolute;
+            color: #ff6b9d;
+            font-size: 20px;
+            animation: float-heart 6s infinite linear;
+            opacity: 0.8;
+        }
+        
+        @keyframes float-heart {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+                transform: translateY(90vh) rotate(45deg) scale(1);
+            }
+            90% {
+                opacity: 0.8;
+                transform: translateY(10vh) rotate(315deg) scale(1);
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg) scale(0);
+                opacity: 0;
+            }
+        }
+        
+        /* Main container */
+        .container {
+            position: relative;
+            z-index: 3;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-top: 100px; /* Account for fixed navbar */
+        }
+        
+        /* Section spacing */
+        .section {
+            margin-bottom: 60px;
+            scroll-margin-top: 100px;
+        }
+        
+        /* Header with modern design */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 60px 20px;
+        }
+        
+        .main-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #fff, #ffeaa7, #fab1a0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            0% { 
+                filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+                transform: scale(1);
+            }
+            100% { 
+                filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
+                transform: scale(1.02);
+            }
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            color: #f8f9fa;
+            font-weight: 300;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        /* Modern love message card */
+        .love-message {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 50px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .love-message:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 35px 70px rgba(0,0,0,0.15);
+        }
+        
+        .love-text {
+            font-size: 1.2rem;
+            line-height: 1.9;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .love-text-arabic {
+            font-size: 1.3rem;
+            line-height: 1.9;
+            color: #f8f9fa;
+            text-align: center;
+            direction: rtl;
+            font-family: 'Amiri', serif;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        /* Modern countdown timer */
+        .countdown-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 50px;
+            margin-bottom: 40px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+        }
+        
+        .countdown-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            background: linear-gradient(45deg, #e91e63, #f06292, #ff9a9e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .countdown-timer {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 25px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .time-unit {
+            background: linear-gradient(135deg, #e91e63, #f06292, #ff9a9e);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(233, 30, 99, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .time-unit::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+            100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+        }
+        
+        .time-unit:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(233, 30, 99, 0.6);
+        }
+        
+        .time-number {
+            font-size: 2.8rem;
+            font-weight: 700;
+            display: block;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .time-label {
+            font-size: 1rem;
+            opacity: 0.95;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Modern photo gallery */
+        .gallery-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 50px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+        }
+        
+        .gallery-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            background: linear-gradient(45deg, #e91e63, #f06292, #ff9a9e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .photo-item {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            aspect-ratio: 1;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        
+        .photo-item:hover {
+            transform: scale(1.05) rotateY(5deg);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+        
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .photo-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .photo-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: 500;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .photo-item:hover .photo-caption {
+            transform: translateY(0);
+        }
+        
+        /* Videos section */
+        .videos-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 50px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+        }
+        
+        .videos-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            background: linear-gradient(45deg, #e91e63, #f06292, #ff9a9e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .video-item {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .video-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+        
+        .video-item video {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+        
+        /* Modern music player */
+        .music-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 50px;
+            margin-bottom: 40px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+        }
+        
+        .music-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            background: linear-gradient(45deg, #e91e63, #f06292, #ff9a9e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 40px;
+        }
+        
+        .youtube-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .youtube-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+        
+        .youtube-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 50px 20px;
+            color: white;
+        }
+        
+        .footer-message {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .footer-hearts {
+            font-size: 2.5rem;
+            color: #ff6b9d;
+            animation: pulse-hearts 2s infinite;
+        }
+        
+        @keyframes pulse-hearts {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                padding-top: 50px;
+                transition: left 0.3s ease;
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+            
+            .nav-menu li {
+                margin: 20px 0;
+            }
+            
+            .nav-link {
+                color: #333;
+                font-size: 1.2rem;
+            }
+            
+            .nav-toggle {
+                display: flex;
+            }
+            
+            .nav-toggle.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+            
+            .nav-toggle.active span:nth-child(2) {
+                opacity: 0;
+            }
+            
+            .nav-toggle.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -6px);
+            }
+            
+            .main-title {
+                font-size: 2.8rem;
+            }
+            
+            .countdown-timer {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .time-unit {
+                padding: 20px 15px;
+            }
+            
+            .time-number {
+                font-size: 2.2rem;
+            }
+            
+            .love-message, .countdown-section, .gallery-section, .music-section, .videos-section {
+                padding: 35px 25px;
+            }
+            
+            .photo-gallery {
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 20px;
+            }
+            
+            .videos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 2.2rem;
+            }
+            
+            .countdown-title, .gallery-title, .music-title, .videos-title {
+                font-size: 2.2rem;
+            }
+            
+            .time-unit {
+                padding: 15px 10px;
+            }
+            
+            .time-number {
+                font-size: 1.8rem;
+            }
+            
+            .love-message, .countdown-section, .gallery-section, .music-section, .videos-section {
+                padding: 25px 20px;
+            }
+        }
+        
+        /* Loading animation */
+        .loading {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">Safa ❤️</div>
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link active">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#message" class="nav-link">Love Letter</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#countdown" class="nav-link">Countdown</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#gallery" class="nav-link">Photos</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#videos" class="nav-link">Videos</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#music" class="nav-link">Music</a>
+                </li>
+            </ul>
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Animated particles background -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Floating hearts -->
+    <div class="floating-hearts" id="floating-hearts"></div>
+    
+    <div class="container">
+        <!-- Header -->
+        <header class="header section loading" id="home">
+            <h1 class="main-title">I Love You, Safa BOUTGHANBOUT</h1>
+            <p class="subtitle">My heart belongs to you forever ❤️</p>
+        </header>
+        
+        <!-- Love message -->
+        <section class="love-message section loading" id="message">
+            <p class="love-text">
+                My dearest Safa, every moment without you feels like an eternity. You are the light of my life, 
+                the beat of my heart, and the reason I smile every day. These months feel so long, but 
+                knowing that you'll be back in my arms soon keeps me going. I miss your beautiful smile, 
+                your gentle touch, and the way you make everything better just by being there. 
+                I love you more than words can express, and I can't wait to hold you again.
+            </p>
+            <p class="love-text-arabic">
+                حبيبتي صفاء، كل لحظة بدونك تبدو كالأبدية. أنت نور حياتي، ونبضة قلبي، والسبب في ابتسامتي كل يوم. 
+                هذه الأشهر تبدو طويلة جداً، لكن معرفة أنك ستعودين إلى أحضاني قريباً تبقيني قوياً. 
+                أشتاق لابتسامتك الجميلة، ولمستك الحنونة، والطريقة التي تجعلين بها كل شيء أفضل بمجرد وجودك. 
+                أحبك أكثر مما يمكن للكلمات أن تعبر، ولا أطيق الانتظار لأحتضنك مرة أخرى.
+            </p>
+        </section>
+        
+        <!-- Countdown timer -->
+        <section class="countdown-section section loading" id="countdown">
+            <h2 class="countdown-title">Until You Come Back Home</h2>
+            <div class="countdown-timer" id="countdown-timer">
+                <div class="time-unit">
+                    <span class="time-number" id="days">--</span>
+                    <span class="time-label">Days</span>
+                </div>
+                <div class="time-unit">
+                    <span class="time-number" id="hours">--</span>
+                    <span class="time-label">Hours</span>
+                </div>
+                <div class="time-unit">
+                    <span class="time-number" id="minutes">--</span>
+                    <span class="time-label">Minutes</span>
+                </div>
+                <div class="time-unit">
+                    <span class="time-number" id="seconds">--</span>
+                    <span class="time-label">Seconds</span>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Photo gallery -->
+        <section class="gallery-section section loading" id="gallery">
+            <h2 class="gallery-title">Our Beautiful Memories</h2>
+            <div class="photo-gallery">
+                <div class="photo-item">
+                    <img src="FISRT DATE.png" alt="Our First Date">
+                    <div class="photo-caption">Our First Date ❤️</div>
+                </div>
+                <div class="photo-item">
+                    <img src="FISRT DATE 2.png" alt="First Date Memories">
+                    <div class="photo-caption">First Date Memories 💕</div>
+                </div>
+                <div class="photo-item">
+                    <img src="BIRTHDAY.png" alt="Birthday Celebration">
+                    <div class="photo-caption">Birthday Celebration 🎂</div>
+                </div>
+                <div class="photo-item">
+                    <img src="VALENTINO.png" alt="Valentine's Day">
+                    <div class="photo-caption">Valentine's Day 💘</div>
+                </div>
+                <div class="photo-item">
+                    <img src="RAMADAN.png" alt="Ramadan Together">
+                    <div class="photo-caption">Ramadan Together 🌙</div>
+                </div>
+                <div class="photo-item">
+                    <img src="FL.png" alt="Beautiful Moments">
+                    <div class="photo-caption">Beautiful Moments ✨</div>
+                </div>
+                <div class="photo-item">
+                    <img src="WhatsApp Image 2025-07-06 at 7.10.31 PM.jpeg" alt="Happy Times">
+                    <div class="photo-caption">Happy Times 😊</div>
+                </div>
+                <div class="photo-item">
+                    <img src="WhatsApp Image 2025-07-06 at 7.10.30 PM.jpeg" alt="Together Forever">
+                    <div class="photo-caption">Together Forever 💖</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Videos section -->
+        <section class="videos-section section loading" id="videos">
+            <h2 class="videos-title">Our Special Moments</h2>
+            <div class="videos-grid">
+                <div class="video-item">
+                    <video controls>
+                        <source src="VID-20250706-WA0119.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="video-item">
+                    <video controls>
+                        <source src="VID-20250307-WA0063.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Music player -->
+        <section class="music-section section loading" id="music">
+            <h2 class="music-title">Our Song ♪</h2>
+            <div class="youtube-container">
+                <iframe 
+                    src="https://www.youtube.com/embed/5sW09t1akXE" 
+                    title="Our Special Song" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="footer loading">
+            <p class="footer-message">Forever and Always, Your Love</p>
+            <div class="footer-hearts">💕 💖 💕</div>
+        </footer>
+    </div>
+    
+    <script>
+        // Navigation functionality
+        const navbar = document.getElementById('navbar');
+        const navToggle = document.getElementById('nav-toggle');
+        const navMenu = document.getElementById('nav-menu');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        // Mobile menu toggle
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            navToggle.classList.toggle('active');
+        });
+        
+        // Smooth scrolling and active link highlighting
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                
+                if (targetSection) {
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+                
+                // Close mobile menu
+                navMenu.classList.remove('active');
+                navToggle.classList.remove('active');
+                
+                // Update active link
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+        
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            // Update active nav link based on scroll position
+            const sections = document.querySelectorAll('.section');
+            const scrollPos = window.scrollY + 150;
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+                
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        });
+        
+        // Modern particle system
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const numberOfParticles = 30;
+            
+            for (let i = 0; i < numberOfParticles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = Math.random() * 4 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 5) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Enhanced floating hearts
+        function createFloatingHeart() {
+            const heartsContainer = document.getElementById('floating-hearts');
+            const hearts = ['❤️', '💖', '💕', '💗', '💝', '💘'];
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 2 + 4) + 's';
+            heart.style.fontSize = (Math.random() * 10 + 15) + 'px';
+            heartsContainer.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 6000);
+        }
+        
+        // Enhanced countdown timer - Updated dates
+        function updateCountdown() {
+            // From July 7, 2025 to January 10, 2026
+            const startDate = new Date(2025, 6, 7); // July 7, 2025
+            const endDate = new Date(2026, 0, 10); // January 10, 2026
+            const now = new Date();
+            
+            let targetDate;
+            let titleText;
+            
+            if (now < startDate) {
+                // Before the start date
+                targetDate = startDate;
+                titleText = "Until Our Journey Begins";
+            } else if (now >= startDate && now < endDate) {
+                // Between start and end date
+                targetDate = endDate;
+                titleText = "Until You Come Back Home";
+            } else {
+                // After end date
+                targetDate = null;
+                titleText = "Welcome Back, My Love! ❤️";
+            }
+            
+            document.querySelector('.countdown-title').textContent = titleText;
+            
+            if (targetDate) {
+                const distance = targetDate - now;
+                
+                if (distance > 0) {
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    
+                    animateNumber('days', days);
+                    animateNumber('hours', hours);
+                    animateNumber('minutes', minutes);
+                    animateNumber('seconds', seconds);
+                } else {
+                    document.getElementById('days').textContent = '00';
+                    document.getElementById('hours').textContent = '00';
+                    document.getElementById('minutes').textContent = '00';
+                    document.getElementById('seconds').textContent = '00';
+                }
+            } else {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+            }
+        }
+        
+        // Animate number changes
+        function animateNumber(elementId, newValue) {
+            const element = document.getElementById(elementId);
+            const currentValue = parseInt(element.textContent) || 0;
+            
+            if (currentValue !== newValue) {
+                element.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    element.textContent = newValue.toString().padStart(2, '0');
+                    element.style.transform = 'scale(1)';
+                }, 150);
+            }
+        }
+        
+        // Enhanced click effects
+        function createClickEffect(x, y) {
+            const hearts = ['💖', '💕', '✨', '🌟'];
+            
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => {
+                    const effect = document.createElement('div');
+                    effect.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+                    effect.style.position = 'fixed';
+                    effect.style.left = (x + (Math.random() - 0.5) * 100) + 'px';
+                    effect.style.top = (y + (Math.random() - 0.5) * 100) + 'px';
+                    effect.style.fontSize = (Math.random() * 15 + 20) + 'px';
+                    effect.style.pointerEvents = 'none';
+                    effect.style.zIndex = '1000';
+                    effect.style.animation = 'float-heart 2s ease-out forwards';
+                    document.body.appendChild(effect);
+                    
+                    setTimeout(() => effect.remove(), 2000);
+                }, i * 100);
+            }
+        }
+        
+        // Loading animations
+        function initLoadingAnimations() {
+            const loadingElements = document.querySelectorAll('.loading');
+            loadingElements.forEach((element, index) => {
+                element.style.animationDelay = (index * 0.2) + 's';
+            });
+        }
+        
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            initLoadingAnimations();
+            createParticles();
+            updateCountdown();
+            
+            // Update countdown every second
+            setInterval(updateCountdown, 1000);
+            
+            // Create floating hearts
+            setInterval(createFloatingHeart, 1500);
+            
+            // Initial hearts
+            for (let i = 0; i < 3; i++) {
+                setTimeout(createFloatingHeart, i * 500);
+            }
+        });
+        
+        // Enhanced click interactions
+        document.addEventListener('click', function(e) {
+            createClickEffect(e.clientX, e.clientY);
+        });
+        
+        // Add some interactive hover effects
+        document.querySelectorAll('.time-unit').forEach(unit => {
+            unit.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.05)';
+            });
+            
+            unit.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html> 
