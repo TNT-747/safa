@@ -8,7 +8,9 @@
     "build": "echo 'No build step needed'",
     "start": "echo 'Static site'"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@upstash/vector": "^1.0.0"
+  },
   "devDependencies": {},
   "engines": {
     "node": "18.x"
