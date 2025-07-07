@@ -2500,7 +2500,7 @@
         }
         
         // Site unlock function
-        async function unlockSite() {
+        window.unlockSite = async function() {
             const input = document.getElementById('site-password-input');
             const errorMsg = document.getElementById('site-error-message');
             
@@ -2542,9 +2542,9 @@
                     input.style.borderColor = 'rgba(255, 255, 255, 0.3)';
                 }, 2000);
             }
-        }
+        };
         
-        async function unlockMessages() {
+        window.unlockMessages = async function() {
             const input = document.getElementById('password-input');
             const errorMsg = document.getElementById('error-message');
             
@@ -2563,7 +2563,7 @@
                     input.style.borderColor = 'rgba(255, 255, 255, 0.2)';
                 }, 2000);
             }
-        }
+        };
         
         function showMessages() {
             const messages = getMessages();
