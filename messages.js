@@ -16,25 +16,24 @@ export default async function handler(req, res) {
     return;
   }
   
+  console.log('API called:', req.method, req.body);
+  
   if (req.method === 'GET') {
     try {
-      // Get all messages by querying with a general term
-      const results = await index.query({
-        data: "chat message",
-        topK: 1000, // Get up to 1000 messages
-        includeVectors: false,
-        includeMetadata: true,
-      });
+      // Use namespace to store all messages
+      const result = await index.fetch(['messages_list']);
+      console.log('Fetch result:', result);
       
-      // Extract messages from results and sort by timestamp
-      const messages = results.map(result => result.metadata).sort((a, b) => 
-        new Date(a.timestamp) - new Date(b.timestamp)
-      );
-      
-      res.status(200).json(messages);
+      if (result && result.length > 0 && result[0].metadata) {
+        const messages = result[0].metadata.messages || [];
+        console.log('Retrieved messages:', messages);
+        res.status(200).json(messages);
+      } else {
+        console.log('No messages found, returning empty array');
+        res.status(200).json([]);
+      }
     } catch (error) {
       console.error('Error reading messages:', error);
-      // If no messages found, return empty array
       res.status(200).json([]);
     }
   }
@@ -42,6 +41,18 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       const { action, message, messageId } = req.body;
+      console.log('POST action:', action, 'message:', message, 'messageId:', messageId);
+      
+      // Get current messages
+      let messages = [];
+      try {
+        const result = await index.fetch(['messages_list']);
+        if (result && result.length > 0 && result[0].metadata) {
+          messages = result[0].metadata.messages || [];
+        }
+      } catch (fetchError) {
+        console.log('No existing messages found');
+      }
       
       if (action === 'add') {
         const newMessage = {
@@ -51,87 +62,48 @@ export default async function handler(req, res) {
           timestamp: new Date().toISOString()
         };
         
-        // Store message in vector database
+        messages.push(newMessage);
+        console.log('Adding message:', newMessage);
+        
+        // Store updated messages list
         await index.upsert({
-          id: newMessage.id,
-          data: `${newMessage.sender}: ${newMessage.text}`, // Searchable content
-          metadata: newMessage
+          id: 'messages_list',
+          data: 'chat messages',
+          metadata: { messages: messages }
         });
         
-        // Get updated messages list
-        const results = await index.query({
-          data: "chat message",
-          topK: 1000,
-          includeVectors: false,
-          includeMetadata: true,
-        });
-        
-        const messages = results.map(result => result.metadata).sort((a, b) => 
-          new Date(a.timestamp) - new Date(b.timestamp)
-        );
-        
+        console.log('Messages stored successfully');
         res.status(200).json({ success: true, messages });
         
       } else if (action === 'edit') {
-        // Get current message
-        const results = await index.query({
-          data: "chat message",
-          topK: 1000,
-          includeVectors: false,
-          includeMetadata: true,
-        });
-        
-        const currentMessage = results.find(result => result.metadata.id === messageId);
-        if (currentMessage) {
-          const updatedMessage = {
-            ...currentMessage.metadata,
-            text: message.text
-          };
+        const messageIndex = messages.findIndex(msg => msg.id === messageId);
+        if (messageIndex !== -1) {
+          messages[messageIndex].text = message.text;
           
-          // Update message in vector database
           await index.upsert({
-            id: messageId,
-            data: `${updatedMessage.sender}: ${updatedMessage.text}`,
-            metadata: updatedMessage
+            id: 'messages_list',
+            data: 'chat messages',
+            metadata: { messages: messages }
           });
         }
-        
-        // Get updated messages list
-        const updatedResults = await index.query({
-          data: "chat message",
-          topK: 1000,
-          includeVectors: false,
-          includeMetadata: true,
-        });
-        
-        const messages = updatedResults.map(result => result.metadata).sort((a, b) => 
-          new Date(a.timestamp) - new Date(b.timestamp)
-        );
         
         res.status(200).json({ success: true, messages });
         
       } else if (action === 'delete') {
-        // Delete message from vector database
-        await index.delete([messageId]);
+        messages = messages.filter(msg => msg.id !== messageId);
         
-        // Get updated messages list
-        const results = await index.query({
-          data: "chat message",
-          topK: 1000,
-          includeVectors: false,
-          includeMetadata: true,
+        await index.upsert({
+          id: 'messages_list',
+          data: 'chat messages',
+          metadata: { messages: messages }
         });
-        
-        const messages = results.map(result => result.metadata).sort((a, b) => 
-          new Date(a.timestamp) - new Date(b.timestamp)
-        );
         
         res.status(200).json({ success: true, messages });
       }
       
     } catch (error) {
       console.error('Error handling message:', error);
-      res.status(500).json({ error: 'Failed to handle message' });
+      res.status(500).json({ error: 'Failed to handle message: ' + error.message });
     }
   }
 } 
