@@ -2024,6 +2024,76 @@
     </div>
     
     <script>
+        // CRITICAL FUNCTIONS - Must be defined first
+        const correctPassword = "iloveyou";
+        
+        // Site unlock function - defined first to be available immediately
+        window.unlockSite = async function() {
+            const input = document.getElementById('site-password-input');
+            const errorMsg = document.getElementById('site-error-message');
+            
+            if (input.value.toLowerCase() === correctPassword) {
+                // Hide password screen with animation
+                const passwordScreen = document.getElementById('site-password-screen');
+                passwordScreen.style.animation = 'fadeOut 0.5s ease-in forwards';
+                
+                setTimeout(async () => {
+                    passwordScreen.style.display = 'none';
+                    document.getElementById('main-content').style.display = 'block';
+                    document.getElementById('navbar').style.display = 'block';
+                    
+                    // Initialize site after unlock
+                    initLoadingAnimations();
+                    createParticles();
+                    setInterval(createFloatingHeart, 3000);
+                    updateCountdown();
+                    setInterval(updateCountdown, 1000);
+                    
+                    // Initialize map
+                    setTimeout(initializeMap, 1000);
+                   
+                   // Auto-unlock messages section since site is already unlocked
+                   messagesUnlocked = true;
+                   document.getElementById('password-container').style.display = 'none';
+                   document.getElementById('messages-content').style.display = 'block';
+                   await loadMessages();
+                   showMessages();
+                   updateProgressBar();
+                }, 500);
+                
+                errorMsg.textContent = '';
+            } else {
+                errorMsg.textContent = '❌ Incorrect password. Try again!';
+                input.value = '';
+                input.style.borderColor = '#ff6b6b';
+                setTimeout(() => {
+                    input.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                }, 2000);
+            }
+        };
+        
+        // Messages unlock function
+        window.unlockMessages = async function() {
+            const input = document.getElementById('password-input');
+            const errorMsg = document.getElementById('error-message');
+            
+            if (input.value.toLowerCase() === correctPassword) {
+                messagesUnlocked = true;
+                document.getElementById('password-container').style.display = 'none';
+                document.getElementById('messages-content').style.display = 'block';
+                await loadMessages();
+                showMessages();
+                errorMsg.textContent = '';
+            } else {
+                errorMsg.textContent = '❌ Incorrect password. Try again!';
+                input.value = '';
+                input.style.borderColor = '#ff6b6b';
+                setTimeout(() => {
+                    input.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                }, 2000);
+            }
+        };
+        
         // Navigation functionality
         const navbar = document.getElementById('navbar');
         const navToggle = document.getElementById('nav-toggle');
@@ -2219,7 +2289,6 @@
         }
         
         // Password protection and messages functionality
-        const correctPassword = 'iloveyou';
         let messagesUnlocked = false;
         let allMessages = [];
         let totalWeeks = 0;
@@ -2499,71 +2568,7 @@
             }, 3000);
         }
         
-        // Site unlock function
-        window.unlockSite = async function() {
-            const input = document.getElementById('site-password-input');
-            const errorMsg = document.getElementById('site-error-message');
-            
-            if (input.value.toLowerCase() === correctPassword) {
-                // Hide password screen with animation
-                const passwordScreen = document.getElementById('site-password-screen');
-                passwordScreen.style.animation = 'fadeOut 0.5s ease-in forwards';
-                
-                setTimeout(() => {
-                    passwordScreen.style.display = 'none';
-                    document.getElementById('main-content').style.display = 'block';
-                    document.getElementById('navbar').style.display = 'block';
-                    
-                                         // Initialize site after unlock
-                     initLoadingAnimations();
-                     createParticles();
-                     setInterval(createFloatingHeart, 3000);
-                     updateCountdown();
-                     setInterval(updateCountdown, 1000);
-                     
-                     // Initialize map
-                     setTimeout(initializeMap, 1000);
-                    
-                    // Auto-unlock messages section since site is already unlocked
-                    messagesUnlocked = true;
-                    document.getElementById('password-container').style.display = 'none';
-                    document.getElementById('messages-content').style.display = 'block';
-                    await loadMessages();
-                    showMessages();
-                    updateProgressBar();
-                }, 500);
-                
-                errorMsg.textContent = '';
-            } else {
-                errorMsg.textContent = '❌ Incorrect password. Try again!';
-                input.value = '';
-                input.style.borderColor = '#ff6b6b';
-                setTimeout(() => {
-                    input.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-                }, 2000);
-            }
-        };
-        
-        window.unlockMessages = async function() {
-            const input = document.getElementById('password-input');
-            const errorMsg = document.getElementById('error-message');
-            
-            if (input.value.toLowerCase() === correctPassword) {
-                messagesUnlocked = true;
-                document.getElementById('password-container').style.display = 'none';
-                document.getElementById('messages-content').style.display = 'block';
-                await loadMessages();
-                showMessages();
-                errorMsg.textContent = '';
-            } else {
-                errorMsg.textContent = '❌ Incorrect password. Try again!';
-                input.value = '';
-                input.style.borderColor = '#ff6b6b';
-                setTimeout(() => {
-                    input.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                }, 2000);
-            }
-        };
+        // These functions are now defined at the top of the script
         
         function showMessages() {
             const messages = getMessages();
