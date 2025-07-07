@@ -1,12 +1,38 @@
-// Simple in-memory storage for testing
-let inMemoryMessages = [];
+import fs from 'fs';
+import path from 'path';
 
-import { Index } from "@upstash/vector";
+// File path for persistent storage
+const MESSAGES_FILE = path.join(process.cwd(), 'messages.json');
 
-const index = new Index({
-  url: "https://tender-asp-12545-us1-vector.upstash.io",
-  token: "ABQFMHRlbmRlci1hc3AtMTI1NDUtdXMxYWRtaW5ZelV4TnpVNVpXUXRZV1k1T0MwME1EQm1MV0ZsWkRJdE5qQTJOekV5T0dNMVl6azQ=",
-});
+// Initialize messages file if it doesn't exist
+function initializeMessagesFile() {
+  if (!fs.existsSync(MESSAGES_FILE)) {
+    fs.writeFileSync(MESSAGES_FILE, JSON.stringify([]));
+  }
+}
+
+// Read messages from file
+function readMessagesFromFile() {
+  try {
+    initializeMessagesFile();
+    const data = fs.readFileSync(MESSAGES_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error reading messages file:', error);
+    return [];
+  }
+}
+
+// Write messages to file
+function writeMessagesToFile(messages) {
+  try {
+    fs.writeFileSync(MESSAGES_FILE, JSON.stringify(messages, null, 2));
+    return true;
+  } catch (error) {
+    console.error('Error writing messages file:', error);
+    return false;
+  }
+}
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -23,30 +49,19 @@ export default async function handler(req, res) {
   
   // Add a simple health check endpoint
   if (req.url === '/api/messages/health') {
-    return res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+    return res.status(200).json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      messagesCount: readMessagesFromFile().length
+    });
   }
   
   if (req.method === 'GET') {
     try {
       console.log('GET request - fetching messages...');
-      
-      // Try Upstash first, fallback to in-memory
-      try {
-        const result = await index.fetch(['messages_list']);
-        console.log('Upstash fetch result:', result);
-        
-        if (result && result.length > 0 && result[0].metadata) {
-          const messages = result[0].metadata.messages || [];
-          console.log('Retrieved messages from Upstash:', messages.length);
-          return res.status(200).json(messages);
-        }
-      } catch (upstashError) {
-        console.error('Upstash error, using in-memory fallback:', upstashError);
-      }
-      
-      // Fallback to in-memory storage
-      console.log('Using in-memory storage, messages count:', inMemoryMessages.length);
-      res.status(200).json(inMemoryMessages);
+      const messages = readMessagesFromFile();
+      console.log('Retrieved messages from file:', messages.length);
+      res.status(200).json(messages);
       
     } catch (error) {
       console.error('Error reading messages:', error);
@@ -59,20 +74,8 @@ export default async function handler(req, res) {
       const { action, message, messageId } = req.body;
       console.log('POST action:', action, 'message:', message, 'messageId:', messageId);
       
-      // Get current messages (try Upstash first, fallback to in-memory)
-      let messages = [];
-      let useUpstash = true;
-      
-      try {
-        const result = await index.fetch(['messages_list']);
-        if (result && result.length > 0 && result[0].metadata) {
-          messages = result[0].metadata.messages || [];
-        }
-      } catch (upstashError) {
-        console.log('Upstash not available, using in-memory storage');
-        messages = [...inMemoryMessages];
-        useUpstash = false;
-      }
+      // Get current messages from file
+      let messages = readMessagesFromFile();
       
       if (action === 'add') {
         const newMessage = {
@@ -85,68 +88,56 @@ export default async function handler(req, res) {
         messages.push(newMessage);
         console.log('Adding message:', newMessage);
         
-        // Try to store in Upstash, fallback to in-memory
-        if (useUpstash) {
-          try {
-            await index.upsert({
-              id: 'messages_list',
-              data: 'chat messages',
-              metadata: { messages: messages }
-            });
-            console.log('Messages stored in Upstash successfully');
-          } catch (upstashError) {
-            console.error('Failed to store in Upstash, using in-memory:', upstashError);
-            inMemoryMessages = messages;
-          }
+        // Save to file
+        if (writeMessagesToFile(messages)) {
+          console.log('Message saved to file successfully');
+          res.status(200).json({ success: true, messages });
         } else {
-          inMemoryMessages = messages;
-          console.log('Messages stored in memory');
+          res.status(500).json({ error: 'Failed to save message to file' });
         }
-        
-        res.status(200).json({ success: true, messages });
         
       } else if (action === 'edit') {
         const messageIndex = messages.findIndex(msg => msg.id === messageId);
         if (messageIndex !== -1) {
           messages[messageIndex].text = message.text;
+          messages[messageIndex].editedAt = new Date().toISOString();
           
-          if (useUpstash) {
-            try {
-              await index.upsert({
-                id: 'messages_list',
-                data: 'chat messages',
-                metadata: { messages: messages }
-              });
-            } catch (upstashError) {
-              console.error('Failed to update in Upstash:', upstashError);
-              inMemoryMessages = messages;
-            }
+          if (writeMessagesToFile(messages)) {
+            console.log('Message updated in file successfully');
+            res.status(200).json({ success: true, messages });
           } else {
-            inMemoryMessages = messages;
-          }
-        }
-        
-        res.status(200).json({ success: true, messages });
-        
-      } else if (action === 'delete') {
-        messages = messages.filter(msg => msg.id !== messageId);
-        
-        if (useUpstash) {
-          try {
-            await index.upsert({
-              id: 'messages_list',
-              data: 'chat messages',
-              metadata: { messages: messages }
-            });
-          } catch (upstashError) {
-            console.error('Failed to delete from Upstash:', upstashError);
-            inMemoryMessages = messages;
+            res.status(500).json({ error: 'Failed to update message in file' });
           }
         } else {
-          inMemoryMessages = messages;
+          res.status(404).json({ error: 'Message not found' });
         }
         
-        res.status(200).json({ success: true, messages });
+      } else if (action === 'delete') {
+        const originalLength = messages.length;
+        messages = messages.filter(msg => msg.id !== messageId);
+        
+        if (messages.length < originalLength) {
+          if (writeMessagesToFile(messages)) {
+            console.log('Message deleted from file successfully');
+            res.status(200).json({ success: true, messages });
+          } else {
+            res.status(500).json({ error: 'Failed to delete message from file' });
+          }
+        } else {
+          res.status(404).json({ error: 'Message not found' });
+        }
+        
+      } else if (action === 'clear') {
+        // Clear all messages
+        if (writeMessagesToFile([])) {
+          console.log('All messages cleared from file successfully');
+          res.status(200).json({ success: true, messages: [] });
+        } else {
+          res.status(500).json({ error: 'Failed to clear messages from file' });
+        }
+        
+      } else {
+        res.status(400).json({ error: 'Invalid action' });
       }
       
     } catch (error) {
@@ -154,4 +145,5 @@ export default async function handler(req, res) {
       res.status(500).json({ error: 'Failed to handle message: ' + error.message });
     }
   }
+} 
 } 
