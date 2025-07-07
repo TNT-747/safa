@@ -1,9 +1,18 @@
 {
-  "buildCommand": "echo 'No build needed'",
-  "outputDirectory": "./",
-  "functions": {
-    "api/messages.js": {
-      "runtime": "@vercel/node@3.0.7"
-    }
+  "name": "safa-love-website",
+  "version": "1.0.0",
+  "description": "Romantic love website for Safa",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step needed'",
+    "start": "echo 'Static site'"
+  },
+  "dependencies": {
+    "@upstash/vector": "^1.0.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": "18.x"
   }
 } 
