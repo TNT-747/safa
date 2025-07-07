@@ -1,9 +1,14 @@
-const fs = require('fs');
-const path = require('path');
+// Simple in-memory storage for testing
+let inMemoryMessages = [];
 
-export default function handler(req, res) {
-  const messagesFile = path.join(process.cwd(), 'messages.txt');
-  
+import { Index } from "@upstash/vector";
+
+const index = new Index({
+  url: "https://tender-asp-12545-us1-vector.upstash.io",
+  token: "ABQFMHRlbmRlci1hc3AtMTI1NDUtdXMxYWRtaW5ZelV4TnpVNVpXUXRZV1k1T0MwME1EQm1MV0ZsWkRJdE5qQTJOekV5T0dNMVl6azQ=",
+});
+
+export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -14,52 +19,139 @@ export default function handler(req, res) {
     return;
   }
   
+  console.log('API called:', req.method, req.url, req.body);
+  
+  // Add a simple health check endpoint
+  if (req.url === '/api/messages/health') {
+    return res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+  }
+  
   if (req.method === 'GET') {
     try {
-      if (fs.existsSync(messagesFile)) {
-        const data = fs.readFileSync(messagesFile, 'utf8');
-        const messages = data ? JSON.parse(data) : [];
-        res.status(200).json(messages);
-      } else {
-        res.status(200).json([]);
+      console.log('GET request - fetching messages...');
+      
+      // Try Upstash first, fallback to in-memory
+      try {
+        const result = await index.fetch(['messages_list']);
+        console.log('Upstash fetch result:', result);
+        
+        if (result && result.length > 0 && result[0].metadata) {
+          const messages = result[0].metadata.messages || [];
+          console.log('Retrieved messages from Upstash:', messages.length);
+          return res.status(200).json(messages);
+        }
+      } catch (upstashError) {
+        console.error('Upstash error, using in-memory fallback:', upstashError);
       }
+      
+      // Fallback to in-memory storage
+      console.log('Using in-memory storage, messages count:', inMemoryMessages.length);
+      res.status(200).json(inMemoryMessages);
+      
     } catch (error) {
       console.error('Error reading messages:', error);
-      res.status(500).json({ error: 'Failed to read messages' });
+      res.status(500).json({ error: 'Failed to fetch messages', details: error.message });
     }
   }
   
   if (req.method === 'POST') {
     try {
       const { action, message, messageId } = req.body;
+      console.log('POST action:', action, 'message:', message, 'messageId:', messageId);
       
+      // Get current messages (try Upstash first, fallback to in-memory)
       let messages = [];
-      if (fs.existsSync(messagesFile)) {
-        const data = fs.readFileSync(messagesFile, 'utf8');
-        messages = data ? JSON.parse(data) : [];
+      let useUpstash = true;
+      
+      try {
+        const result = await index.fetch(['messages_list']);
+        if (result && result.length > 0 && result[0].metadata) {
+          messages = result[0].metadata.messages || [];
+        }
+      } catch (upstashError) {
+        console.log('Upstash not available, using in-memory storage');
+        messages = [...inMemoryMessages];
+        useUpstash = false;
       }
       
       if (action === 'add') {
-        messages.push({
+        const newMessage = {
           id: Date.now().toString(),
           sender: message.sender,
           text: message.text,
           timestamp: new Date().toISOString()
-        });
+        };
+        
+        messages.push(newMessage);
+        console.log('Adding message:', newMessage);
+        
+        // Try to store in Upstash, fallback to in-memory
+        if (useUpstash) {
+          try {
+            await index.upsert({
+              id: 'messages_list',
+              data: 'chat messages',
+              metadata: { messages: messages }
+            });
+            console.log('Messages stored in Upstash successfully');
+          } catch (upstashError) {
+            console.error('Failed to store in Upstash, using in-memory:', upstashError);
+            inMemoryMessages = messages;
+          }
+        } else {
+          inMemoryMessages = messages;
+          console.log('Messages stored in memory');
+        }
+        
+        res.status(200).json({ success: true, messages });
+        
       } else if (action === 'edit') {
         const messageIndex = messages.findIndex(msg => msg.id === messageId);
         if (messageIndex !== -1) {
           messages[messageIndex].text = message.text;
+          
+          if (useUpstash) {
+            try {
+              await index.upsert({
+                id: 'messages_list',
+                data: 'chat messages',
+                metadata: { messages: messages }
+              });
+            } catch (upstashError) {
+              console.error('Failed to update in Upstash:', upstashError);
+              inMemoryMessages = messages;
+            }
+          } else {
+            inMemoryMessages = messages;
+          }
         }
+        
+        res.status(200).json({ success: true, messages });
+        
       } else if (action === 'delete') {
         messages = messages.filter(msg => msg.id !== messageId);
+        
+        if (useUpstash) {
+          try {
+            await index.upsert({
+              id: 'messages_list',
+              data: 'chat messages',
+              metadata: { messages: messages }
+            });
+          } catch (upstashError) {
+            console.error('Failed to delete from Upstash:', upstashError);
+            inMemoryMessages = messages;
+          }
+        } else {
+          inMemoryMessages = messages;
+        }
+        
+        res.status(200).json({ success: true, messages });
       }
       
-      fs.writeFileSync(messagesFile, JSON.stringify(messages, null, 2));
-      res.status(200).json({ success: true, messages });
     } catch (error) {
       console.error('Error handling message:', error);
-      res.status(500).json({ error: 'Failed to handle message' });
+      res.status(500).json({ error: 'Failed to handle message: ' + error.message });
     }
   }
 } 
