@@ -750,73 +750,159 @@
             margin-left: 8px;
         }
         
-        /* Interactive Map Pins */
+        /* Interactive Map Pins - Modern S&A Design */
         .map-pin {
             position: absolute;
-            width: 35px;
-            height: 35px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.1rem;
             color: white;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .map-pin::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            border-radius: 50%;
+            animation: pinShine 3s infinite;
         }
         
         .map-pin.together {
-            background: linear-gradient(135deg, #e91e63, #f06292);
-            animation: pinPulse 2s infinite;
+            background: linear-gradient(135deg, #e91e63, #f06292, #ff9a9e);
+            animation: pinPulse 2.5s infinite;
+            box-shadow: 0 8px 25px rgba(233, 30, 99, 0.4);
         }
         
         .map-pin.him {
-            background: linear-gradient(135deg, #2196F3, #21CBF3);
-            animation: pinPulse 2s infinite 0.5s;
+            background: linear-gradient(135deg, #2196F3, #21CBF3, #64B5F6);
+            animation: pinPulse 2.5s infinite 0.7s;
+            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
         }
         
         .map-pin.her {
-            background: linear-gradient(135deg, #FF9800, #FFC107);
-            animation: pinPulse 2s infinite 1s;
+            background: linear-gradient(135deg, #FF9800, #FFC107, #FFD54F);
+            animation: pinPulse 2.5s infinite 1.4s;
+            box-shadow: 0 8px 25px rgba(255, 152, 0, 0.4);
         }
         
         .map-pin.trending {
-            background: linear-gradient(135deg, #4CAF50, #8BC34A);
-            animation: pinPulse 1.5s infinite;
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+            background: linear-gradient(135deg, #4CAF50, #8BC34A, #CDDC39);
+            animation: pinPulse 2s infinite;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.5);
         }
         
         .map-pin:hover {
-            transform: scale(1.3);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            transform: scale(1.4) rotate(5deg);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
             z-index: 10;
+            border-color: rgba(255, 255, 255, 0.6);
         }
         
         .map-pin.active {
-            transform: scale(1.4);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transform: scale(1.5) rotate(-5deg);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
             z-index: 15;
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .map-pin .pin-text {
+            position: relative;
+            z-index: 2;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transform: scale(1);
+            transition: transform 0.3s ease;
+        }
+        
+        .map-pin:hover .pin-text {
+            transform: scale(1.1);
         }
         
         .map-pin::after {
             content: '';
             position: absolute;
-            top: 50%;
+            bottom: -8px;
             left: 50%;
-            transform: translate(-50%, -50%);
-            width: 8px;
-            height: 8px;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid currentColor;
+            opacity: 0.8;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
         }
         
         @keyframes pinPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            }
+            50% { 
+                transform: scale(1.15);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+            }
+        }
+        
+        @keyframes pinShine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+            100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+        }
+        
+        /* Special love effect for together pins */
+        .map-pin.together::before {
+            background: linear-gradient(45deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                rgba(255, 192, 203, 0.4), 
+                rgba(255, 255, 255, 0.3), 
+                transparent
+            );
+            animation: pinShine 2s infinite;
+        }
+        
+        /* Love glow effect */
+        .map-pin.together {
+            box-shadow: 
+                0 8px 25px rgba(233, 30, 99, 0.4),
+                0 0 20px rgba(233, 30, 99, 0.2);
+        }
+        
+        .map-pin.him {
+            box-shadow: 
+                0 8px 25px rgba(33, 150, 243, 0.4),
+                0 0 20px rgba(33, 150, 243, 0.2);
+        }
+        
+        .map-pin.her {
+            box-shadow: 
+                0 8px 25px rgba(255, 152, 0, 0.4),
+                0 0 20px rgba(255, 152, 0, 0.2);
+        }
+        
+        .map-pin.trending {
+            box-shadow: 
+                0 8px 25px rgba(76, 175, 80, 0.5),
+                0 0 20px rgba(76, 175, 80, 0.3);
         }
         
         .map-tooltip {
@@ -904,9 +990,20 @@
             }
             
             .map-pin {
-                width: 30px;
-                height: 30px;
-                font-size: 1rem;
+                width: 36px;
+                height: 36px;
+                font-size: 0.8rem;
+            }
+            
+            .map-pin .pin-text {
+                font-size: 0.75rem;
+            }
+            
+            .map-pin::after {
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-top: 6px solid currentColor;
+                bottom: -6px;
             }
         }
         
@@ -2001,6 +2098,150 @@
                 transform: translateY(0);
             }
         }
+        
+        .trending-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #4CAF50;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        /* Add Location Form Styles */
+        .add-location-form {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .add-location-form h4 {
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .form-row:last-child {
+            grid-template-columns: 1fr auto;
+        }
+        
+        .location-input, .location-select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: white;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .location-input:focus, .location-select:focus {
+            outline: none;
+            border-color: rgba(233, 30, 99, 0.5);
+            box-shadow: 0 0 10px rgba(233, 30, 99, 0.3);
+        }
+        
+        .location-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .add-location-btn {
+            background: linear-gradient(135deg, #e91e63, #f06292);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+        }
+        
+        .add-location-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(233, 30, 99, 0.4);
+        }
+        
+        /* Sample Locations */
+        .sample-locations {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .sample-locations h4 {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .sample-location {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .sample-location:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .sample-location span {
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .delete-location-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(244, 67, 54, 0.8);
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            color: white;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+        }
+        
+        .location-card:hover .delete-location-btn {
+            opacity: 1;
+        }
+        
+        .delete-location-btn:hover {
+            background: rgba(244, 67, 54, 1);
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body>
@@ -2181,6 +2422,7 @@
                             <button class="map-btn" onclick="resetMap()">🔄 Reset</button>
                             <button class="map-btn" onclick="toggleTrending()">🔥 Trending</button>
                             <button class="map-btn" onclick="zoomIn()">➕ Zoom</button>
+                            <button class="map-btn" onclick="clearAllLocations()" style="background: rgba(244, 67, 54, 0.8);">🗑️ Clear All</button>
                         </div>
                     </div>
                     
@@ -2218,95 +2460,62 @@
                         <button class="filter-btn" data-filter="trending">🔥 Trending</button>
                     </div>
                     
-                    <div class="location-card" data-location="paris" data-type="together">
-                        <div class="location-type-badge together">Together</div>
-                        <div class="location-icon">🗼</div>
-                        <div class="location-info">
-                            <h3>Paris, France</h3>
-                            <p>The city of love where we walked hand in hand</p>
-                            <span class="location-date">July 2024</span>
+                    <!-- Add Location Form -->
+                    <div class="add-location-form">
+                        <h4>➕ Add New Location</h4>
+                        <div class="form-row">
+                            <input type="text" id="location-name" placeholder="Location name (e.g., Paris, France)" class="location-input">
+                            <select id="location-type" class="location-select">
+                                <option value="together">Together</option>
+                                <option value="him">Him</option>
+                                <option value="her">Her</option>
+                                <option value="trending">🔥 Trending</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <input type="text" id="location-description" placeholder="Description (e.g., Romantic dinner)" class="location-input">
+                            <input type="text" id="location-date" placeholder="Date (e.g., July 2024)" class="location-input">
+                        </div>
+                        <div class="form-row">
+                            <input type="number" id="location-x" placeholder="X position (0-100)" class="location-input" min="0" max="100" step="1">
+                            <input type="number" id="location-y" placeholder="Y position (0-100)" class="location-input" min="0" max="100" step="1">
+                        </div>
+                        <div class="form-row">
+                            <select id="location-icon" class="location-select">
+                                <option value="🗼">🗼 Landmark</option>
+                                <option value="🏛️">🏛️ Museum</option>
+                                <option value="🏖️">🏖️ Beach</option>
+                                <option value="🏰">🏰 Castle</option>
+                                <option value="🌷">🌷 Garden</option>
+                                <option value="🗾">🗾 City</option>
+                                <option value="🚣">🚣 Water</option>
+                                <option value="🏙️">🏙️ Modern</option>
+                                <option value="🌴">🌴 Tropical</option>
+                                <option value="❤️">❤️ Love</option>
+                                <option value="💕">💕 Heart</option>
+                                <option value="✨">✨ Special</option>
+                                <option value="🌟">🌟 Star</option>
+                            </select>
+                            <button onclick="addNewLocation()" class="add-location-btn">➕ Add Location</button>
                         </div>
                     </div>
                     
-                    <div class="location-card" data-location="rome" data-type="together">
-                        <div class="location-type-badge together">Together</div>
-                        <div class="location-icon">🏛️</div>
-                        <div class="location-info">
-                            <h3>Rome, Italy</h3>
-                            <p>Ancient history and romantic dinners</p>
-                            <span class="location-date">August 2024</span>
-                        </div>
+                    <!-- Location Cards Container -->
+                    <div id="location-cards-container">
+                        <!-- Your locations will be added here -->
                     </div>
                     
-                    <div class="location-card" data-location="santorini" data-type="together">
-                        <div class="location-type-badge together">Together</div>
-                        <div class="location-icon">🏖️</div>
-                        <div class="location-info">
-                            <h3>Santorini, Greece</h3>
-                            <p>Sunset views and endless blue waters</p>
-                            <span class="location-date">September 2024</span>
+                    <!-- Sample locations (you can delete these) -->
+                    <div class="sample-locations">
+                        <h4>💡 Sample Locations (Click to add)</h4>
+                        <div class="sample-location" onclick="addSampleLocation('Paris, France', 'together', 'The city of love where we walked hand in hand', 'July 2024', 45, 35, '🗼')">
+                            <span>🗼 Paris, France</span>
                         </div>
-                    </div>
-                    
-                    <div class="location-card" data-location="barcelona" data-type="him">
-                        <div class="location-type-badge him">Him</div>
-                        <div class="location-icon">🏰</div>
-                        <div class="location-info">
-                            <h3>Barcelona, Spain</h3>
-                            <p>Art, architecture, and amazing food</p>
-                            <span class="location-date">October 2024</span>
+                        <div class="sample-location" onclick="addSampleLocation('Rome, Italy', 'together', 'Ancient history and romantic dinners', 'August 2024', 55, 55, '🏛️')">
+                            <span>🏛️ Rome, Italy</span>
                         </div>
-                    </div>
-                    
-                    <div class="location-card" data-location="amsterdam" data-type="her">
-                        <div class="location-type-badge her">Her</div>
-                        <div class="location-icon">🌷</div>
-                        <div class="location-info">
-                            <h3>Amsterdam, Netherlands</h3>
-                            <p>Canals, flowers, and cozy cafes</p>
-                            <span class="location-date">November 2024</span>
-                        </div>
-                    </div>
-                    
-                    <div class="location-card" data-location="tokyo" data-type="trending">
-                        <div class="location-type-badge trending">🔥 Trending</div>
-                        <div class="location-icon">🗾</div>
-                        <div class="location-info">
-                            <h3>Tokyo, Japan</h3>
-                            <p>Modern city with traditional charm</p>
-                            <span class="location-date">December 2024</span>
-                            <span class="trending-indicator">🔥 Popular Now</span>
-                        </div>
-                    </div>
-                    
-                    <div class="location-card" data-location="venice" data-type="trending">
-                        <div class="location-type-badge trending">🔥 Trending</div>
-                        <div class="location-icon">🚣</div>
-                        <div class="location-info">
-                            <h3>Venice, Italy</h3>
-                            <p>Romantic gondola rides</p>
-                            <span class="location-date">January 2025</span>
-                            <span class="trending-indicator">🔥 Popular Now</span>
-                        </div>
-                    </div>
-                    
-                    <div class="location-card" data-location="dubai" data-type="him">
-                        <div class="location-type-badge him">Him</div>
-                        <div class="location-icon">🏙️</div>
-                        <div class="location-info">
-                            <h3>Dubai, UAE</h3>
-                            <p>Luxury shopping and desert adventures</p>
-                            <span class="location-date">February 2025</span>
-                        </div>
-                    </div>
-                    
-                    <div class="location-card" data-location="bali" data-type="her">
-                        <div class="location-type-badge her">Her</div>
-                        <div class="location-icon">🌴</div>
-                        <div class="location-info">
-                            <h3>Bali, Indonesia</h3>
-                            <p>Tropical paradise and spiritual retreats</p>
-                            <span class="location-date">March 2025</span>
+                        <div class="sample-location" onclick="addSampleLocation('Santorini, Greece', 'together', 'Sunset views and endless blue waters', 'September 2024', 70, 65, '🏖️')">
+                            <span>🏖️ Santorini, Greece</span>
                         </div>
                     </div>
                 </div>
@@ -3137,26 +3346,17 @@
         let mapZoom = 1;
         let showTrendingOnly = false;
         let currentFilter = 'all';
+        let userLocations = [];
         
-        function initializeMap() {
+        async function initializeMap() {
             const mapContainer = document.getElementById('interactive-map');
             const locationCards = document.querySelectorAll('.location-card');
             
-            // Enhanced map data with coordinates and types
-            const locations = {
-                paris: { x: 45, y: 35, name: 'Paris, France', type: 'together', icon: '🗼' },
-                rome: { x: 55, y: 55, name: 'Rome, Italy', type: 'together', icon: '🏛️' },
-                santorini: { x: 70, y: 65, name: 'Santorini, Greece', type: 'together', icon: '🏖️' },
-                barcelona: { x: 35, y: 60, name: 'Barcelona, Spain', type: 'him', icon: '🏰' },
-                amsterdam: { x: 50, y: 25, name: 'Amsterdam, Netherlands', type: 'her', icon: '🌷' },
-                tokyo: { x: 85, y: 45, name: 'Tokyo, Japan', type: 'trending', icon: '🗾' },
-                venice: { x: 60, y: 50, name: 'Venice, Italy', type: 'trending', icon: '🚣' },
-                dubai: { x: 75, y: 70, name: 'Dubai, UAE', type: 'him', icon: '🏙️' },
-                bali: { x: 80, y: 80, name: 'Bali, Indonesia', type: 'her', icon: '🌴' }
-            };
+            // Load saved locations from database
+            await loadUserLocations();
             
             // Create map pins
-            createMapPins(locations);
+            createMapPins(userLocations);
             
             // Add click events to location cards
             locationCards.forEach(card => {
@@ -3173,13 +3373,289 @@
             setupSearch();
         }
         
+        async function loadUserLocations() {
+            try {
+                console.log('Loading locations from database...');
+                const response = await fetch('/api/locations');
+                
+                if (response.ok) {
+                    userLocations = await response.json();
+                    console.log('Locations loaded from database:', userLocations.length);
+                } else {
+                    throw new Error(`API responded with status: ${response.status}`);
+                }
+            } catch (error) {
+                console.error('Error loading locations from database:', error);
+                console.log('Falling back to localStorage...');
+                
+                // Fallback to localStorage
+                const saved = localStorage.getItem('userLocations');
+                if (saved) {
+                    userLocations = JSON.parse(saved);
+                    console.log('Locations loaded from localStorage:', userLocations.length);
+                } else {
+                    console.log('No locations found in localStorage either');
+                    userLocations = [];
+                }
+            }
+            
+            displayLocationCards();
+        }
+        
+        async function saveUserLocations() {
+            // Database saves are handled by individual location operations
+        }
+        
+        async function addNewLocation() {
+            const name = document.getElementById('location-name').value.trim();
+            const type = document.getElementById('location-type').value;
+            const description = document.getElementById('location-description').value.trim();
+            const date = document.getElementById('location-date').value.trim();
+            const x = parseInt(document.getElementById('location-x').value);
+            const y = parseInt(document.getElementById('location-y').value);
+            const icon = document.getElementById('location-icon').value;
+            
+            // Validate inputs
+            if (!name || !description || !date || isNaN(x) || isNaN(y)) {
+                showNotification('❌ Please fill in all fields correctly!', 'error');
+                return;
+            }
+            
+            if (x < 0 || x > 100 || y < 0 || y > 100) {
+                showNotification('❌ X and Y positions must be between 0 and 100!', 'error');
+                return;
+            }
+            
+            try {
+                console.log('Adding location to database:', { name, type, description, date, x, y, icon });
+                
+                const response = await fetch('/api/locations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'add',
+                        location: { name, type, description, date, x, y, icon }
+                    })
+                });
+                
+                console.log('Response status:', response.status);
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('API result:', result);
+                    if (result.success) {
+                        userLocations = result.locations;
+                        displayLocationCards();
+                        createMapPins(userLocations);
+                        clearLocationForm();
+                        showNotification(`📍 ${name} added successfully!`, 'success');
+                        console.log('Location added successfully to database');
+                        return;
+                    }
+                } else {
+                    console.error('API response not ok:', response.status, response.statusText);
+                    // Fallback: add to local storage
+                    addLocationToLocalStorage(name, type, description, date, x, y, icon);
+                    return;
+                }
+            } catch (error) {
+                console.error('Error adding location:', error);
+                // Fallback: add to local storage
+                addLocationToLocalStorage(name, type, description, date, x, y, icon);
+            }
+        }
+        
+        async function addSampleLocation(name, type, description, date, x, y, icon) {
+            // Check if location already exists
+            const exists = userLocations.find(loc => loc.name === name);
+            if (exists) {
+                showNotification(`📍 ${name} already exists!`, 'info');
+                return;
+            }
+            
+            try {
+                console.log('Adding sample location to database:', { name, type, description, date, x, y, icon });
+                
+                const response = await fetch('/api/locations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'add',
+                        location: { name, type, description, date, x, y, icon }
+                    })
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success) {
+                        userLocations = result.locations;
+                        displayLocationCards();
+                        createMapPins(userLocations);
+                        showNotification(`📍 ${name} added from samples!`, 'success');
+                        console.log('Sample location added successfully to database');
+                        return;
+                    }
+                } else {
+                    // Fallback: add to local storage
+                    addLocationToLocalStorage(name, type, description, date, x, y, icon);
+                    return;
+                }
+            } catch (error) {
+                console.error('Error adding sample location:', error);
+                // Fallback: add to local storage
+                addLocationToLocalStorage(name, type, description, date, x, y, icon);
+            }
+        }
+        
+        // Fallback function to save to localStorage
+        function addLocationToLocalStorage(name, type, description, date, x, y, icon) {
+            console.log('Using localStorage fallback for location');
+            const newLocation = {
+                id: Date.now().toString(),
+                name: name,
+                type: type,
+                description: description,
+                date: date,
+                x: x,
+                y: y,
+                icon: icon
+            };
+            
+            userLocations.push(newLocation);
+            displayLocationCards();
+            createMapPins(userLocations);
+            clearLocationForm();
+            
+            // Save to localStorage
+            localStorage.setItem('userLocations', JSON.stringify(userLocations));
+            console.log('Location saved to localStorage');
+            
+            // Show notification
+            showNotification('Location saved locally! 📍', 'info');
+        }
+        
+        function clearLocationForm() {
+            document.getElementById('location-name').value = '';
+            document.getElementById('location-description').value = '';
+            document.getElementById('location-date').value = '';
+            document.getElementById('location-x').value = '';
+            document.getElementById('location-y').value = '';
+            document.getElementById('location-type').value = 'together';
+            document.getElementById('location-icon').value = '🗼';
+        }
+        
+        function displayLocationCards() {
+            const container = document.getElementById('location-cards-container');
+            container.innerHTML = '';
+            
+            if (userLocations.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.7);">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">🗺️</div>
+                        <div>No locations added yet!</div>
+                        <div style="font-size: 0.9rem; margin-top: 10px; opacity: 0.8;">
+                            Add your first location using the form above
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            userLocations.forEach(location => {
+                const card = document.createElement('div');
+                card.className = 'location-card';
+                card.dataset.location = location.id;
+                card.dataset.type = location.type;
+                
+                const typeText = location.type === 'together' ? 'Together' : 
+                                location.type === 'him' ? 'Him' : 
+                                location.type === 'her' ? 'Her' : '🔥 Trending';
+                
+                const trendingIndicator = location.type === 'trending' ? 
+                    '<span class="trending-indicator">🔥 Popular Now</span>' : '';
+                
+                card.innerHTML = `
+                    <div class="location-type-badge ${location.type}">${typeText}</div>
+                    <div class="location-icon">${location.icon}</div>
+                    <div class="location-info">
+                        <h3>${location.name}</h3>
+                        <p>${location.description}</p>
+                        <span class="location-date">${location.date}</span>
+                        ${trendingIndicator}
+                    </div>
+                    <button onclick="deleteLocation('${location.id}')" class="delete-location-btn" title="Delete location">🗑️</button>
+                `;
+                
+                // Add click event
+                card.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('delete-location-btn')) {
+                        selectLocation(location.id);
+                    }
+                });
+                
+                container.appendChild(card);
+            });
+        }
+        
+        async function deleteLocation(locationId) {
+            if (confirm('Are you sure you want to delete this location?')) {
+                try {
+                    console.log('Deleting location from database:', locationId);
+                    
+                    const response = await fetch('/api/locations', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            action: 'delete',
+                            locationId: locationId
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result.success) {
+                            userLocations = result.locations;
+                            displayLocationCards();
+                            createMapPins(userLocations);
+                            showNotification('🗑️ Location deleted!', 'info');
+                            console.log('Location deleted successfully from database');
+                            return;
+                        }
+                    } else {
+                        console.error('API response not ok:', response.status, response.statusText);
+                        // Fallback: delete from local storage
+                        deleteLocationFromLocalStorage(locationId);
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Error deleting location:', error);
+                    // Fallback: delete from local storage
+                    deleteLocationFromLocalStorage(locationId);
+                }
+            }
+        }
+        
+        // Fallback function to delete from localStorage
+        function deleteLocationFromLocalStorage(locationId) {
+            console.log('Using localStorage fallback for location deletion');
+            userLocations = userLocations.filter(loc => loc.id !== locationId);
+            localStorage.setItem('userLocations', JSON.stringify(userLocations));
+            displayLocationCards();
+            createMapPins(userLocations);
+            showNotification('Location deleted locally! 🗑️', 'info');
+        }
+        
         function createMapPins(locations) {
             const pinsContainer = document.getElementById('map-pins');
             pinsContainer.innerHTML = '';
             
-            Object.keys(locations).forEach(locationKey => {
-                const location = locations[locationKey];
-                
+            locations.forEach(location => {
                 // Skip if filtering and location doesn't match
                 if (currentFilter !== 'all' && location.type !== currentFilter) {
                     return;
@@ -3194,8 +3670,13 @@
                 pin.className = `map-pin ${location.type}`;
                 pin.style.left = location.x + '%';
                 pin.style.top = location.y + '%';
-                pin.dataset.location = locationKey;
-                pin.innerHTML = location.icon;
+                pin.dataset.location = location.id;
+                
+                // Create the pin content with S&A text
+                const pinText = document.createElement('div');
+                pinText.className = 'pin-text';
+                pinText.innerHTML = 'S&A';
+                pin.appendChild(pinText);
                 
                 // Add tooltip
                 const tooltip = document.createElement('div');
@@ -3205,7 +3686,7 @@
                 
                 // Add click event
                 pin.addEventListener('click', () => {
-                    selectLocation(locationKey);
+                    selectLocation(location.id);
                 });
                 
                 pinsContainer.appendChild(pin);
@@ -3230,19 +3711,7 @@
                     filterLocationCards();
                     
                     // Recreate map pins with new filter
-                    const locations = {
-                        paris: { x: 45, y: 35, name: 'Paris, France', type: 'together', icon: '🗼' },
-                        rome: { x: 55, y: 55, name: 'Rome, Italy', type: 'together', icon: '🏛️' },
-                        santorini: { x: 70, y: 65, name: 'Santorini, Greece', type: 'together', icon: '🏖️' },
-                        barcelona: { x: 35, y: 60, name: 'Barcelona, Spain', type: 'him', icon: '🏰' },
-                        amsterdam: { x: 50, y: 25, name: 'Amsterdam, Netherlands', type: 'her', icon: '🌷' },
-                        tokyo: { x: 85, y: 45, name: 'Tokyo, Japan', type: 'trending', icon: '🗾' },
-                        venice: { x: 60, y: 50, name: 'Venice, Italy', type: 'trending', icon: '🚣' },
-                        dubai: { x: 75, y: 70, name: 'Dubai, UAE', type: 'him', icon: '🏙️' },
-                        bali: { x: 80, y: 80, name: 'Bali, Indonesia', type: 'her', icon: '🌴' }
-                    };
-                    
-                    createMapPins(locations);
+                    createMapPins(userLocations);
                 });
             });
         }
@@ -3283,7 +3752,7 @@
             });
         }
         
-        function selectLocation(locationKey) {
+        function selectLocation(locationId) {
             // Remove active class from all cards and pins
             document.querySelectorAll('.location-card').forEach(card => {
                 card.classList.remove('active');
@@ -3293,8 +3762,8 @@
             });
             
             // Add active class to selected card and pin
-            const selectedCard = document.querySelector(`[data-location="${locationKey}"]`);
-            const selectedPin = document.querySelector(`.map-pin[data-location="${locationKey}"]`);
+            const selectedCard = document.querySelector(`[data-location="${locationId}"]`);
+            const selectedPin = document.querySelector(`.map-pin[data-location="${locationId}"]`);
             
             if (selectedCard) {
                 selectedCard.classList.add('active');
@@ -3314,19 +3783,10 @@
             createLocationSparkles(selectedPin);
             
             // Show notification
-            const locations = {
-                paris: 'Paris, France',
-                rome: 'Rome, Italy',
-                santorini: 'Santorini, Greece',
-                barcelona: 'Barcelona, Spain',
-                amsterdam: 'Amsterdam, Netherlands',
-                tokyo: 'Tokyo, Japan',
-                venice: 'Venice, Italy',
-                dubai: 'Dubai, UAE',
-                bali: 'Bali, Indonesia'
-            };
-            
-            showNotification(`📍 ${locations[locationKey]} selected!`, 'info');
+            const location = userLocations.find(loc => loc.id === locationId);
+            if (location) {
+                showNotification(`📍 ${location.name} selected!`, 'info');
+            }
         }
         
         function createLocationSparkles(pin) {
@@ -3375,21 +3835,59 @@
             });
             
             // Recreate pins
-            const locations = {
-                paris: { x: 45, y: 35, name: 'Paris, France', type: 'together', icon: '🗼' },
-                rome: { x: 55, y: 55, name: 'Rome, Italy', type: 'together', icon: '🏛️' },
-                santorini: { x: 70, y: 65, name: 'Santorini, Greece', type: 'together', icon: '🏖️' },
-                barcelona: { x: 35, y: 60, name: 'Barcelona, Spain', type: 'him', icon: '🏰' },
-                amsterdam: { x: 50, y: 25, name: 'Amsterdam, Netherlands', type: 'her', icon: '🌷' },
-                tokyo: { x: 85, y: 45, name: 'Tokyo, Japan', type: 'trending', icon: '🗾' },
-                venice: { x: 60, y: 50, name: 'Venice, Italy', type: 'trending', icon: '🚣' },
-                dubai: { x: 75, y: 70, name: 'Dubai, UAE', type: 'him', icon: '🏙️' },
-                bali: { x: 80, y: 80, name: 'Bali, Indonesia', type: 'her', icon: '🌴' }
-            };
-            
-            createMapPins(locations);
+            createMapPins(userLocations);
             
             showNotification('🗺️ Map reset!', 'success');
+        }
+        
+        // Function to clear all locations
+        async function clearAllLocations() {
+            if (confirm("Are you sure you want to delete all locations? This cannot be undone.")) {
+                try {
+                    console.log('Clearing all locations from database...');
+                    
+                    const response = await fetch('/api/locations', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            action: 'clear'
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result.success) {
+                            userLocations = result.locations;
+                            displayLocationCards();
+                            createMapPins(userLocations);
+                            showNotification('🗑️ All locations cleared!', 'info');
+                            console.log('All locations cleared successfully from database');
+                            return;
+                        }
+                    } else {
+                        console.error('API response not ok:', response.status, response.statusText);
+                        // Fallback: clear from local storage
+                        clearAllLocationsFromLocalStorage();
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Error clearing all locations:', error);
+                    // Fallback: clear from local storage
+                    clearAllLocationsFromLocalStorage();
+                }
+            }
+        }
+        
+        // Fallback function to clear all locations from localStorage
+        function clearAllLocationsFromLocalStorage() {
+            console.log('Using localStorage fallback for clearing all locations');
+            userLocations = [];
+            localStorage.setItem('userLocations', JSON.stringify(userLocations));
+            displayLocationCards();
+            createMapPins(userLocations);
+            showNotification('All locations cleared locally! 🗑️', 'info');
         }
         
         function toggleTrending() {
@@ -3404,19 +3902,7 @@
             }
             
             // Recreate pins
-            const locations = {
-                paris: { x: 45, y: 35, name: 'Paris, France', type: 'together', icon: '🗼' },
-                rome: { x: 55, y: 55, name: 'Rome, Italy', type: 'together', icon: '🏛️' },
-                santorini: { x: 70, y: 65, name: 'Santorini, Greece', type: 'together', icon: '🏖️' },
-                barcelona: { x: 35, y: 60, name: 'Barcelona, Spain', type: 'him', icon: '🏰' },
-                amsterdam: { x: 50, y: 25, name: 'Amsterdam, Netherlands', type: 'her', icon: '🌷' },
-                tokyo: { x: 85, y: 45, name: 'Tokyo, Japan', type: 'trending', icon: '🗾' },
-                venice: { x: 60, y: 50, name: 'Venice, Italy', type: 'trending', icon: '🚣' },
-                dubai: { x: 75, y: 70, name: 'Dubai, UAE', type: 'him', icon: '🏙️' },
-                bali: { x: 80, y: 80, name: 'Bali, Indonesia', type: 'her', icon: '🌴' }
-            };
-            
-            createMapPins(locations);
+            createMapPins(userLocations);
         }
         
         function zoomIn() {
