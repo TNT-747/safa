@@ -423,7 +423,7 @@
             box-shadow: 0 25px 50px rgba(0,0,0,0.1);
         }
         
-        /* Holiday Map Section */
+        /* Interactive Google Maps-like Section */
         .map-section {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
@@ -458,15 +458,69 @@
             display: grid;
             grid-template-columns: 1fr 400px;
             gap: 30px;
-            min-height: 500px;
+            min-height: 600px;
         }
         
         .interactive-map {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             border-radius: 20px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .map-header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .map-search {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 8px 15px;
+            color: white;
+            font-size: 0.9rem;
+            width: 200px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .map-search::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .map-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .map-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .map-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .map-content {
+            flex: 1;
+            position: relative;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -476,11 +530,68 @@
             padding: 40px;
         }
         
+        .map-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+        }
+        
+        .map-legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .legend-marker {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .legend-marker.together {
+            background: linear-gradient(135deg, #e91e63, #f06292);
+        }
+        
+        .legend-marker.him {
+            background: linear-gradient(135deg, #2196F3, #21CBF3);
+        }
+        
+        .legend-marker.her {
+            background: linear-gradient(135deg, #FF9800, #FFC107);
+        }
+        
+        .legend-marker.trending {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+        
         .map-locations {
             display: flex;
             flex-direction: column;
             gap: 15px;
-            max-height: 500px;
+            max-height: 600px;
             overflow-y: auto;
             padding-right: 10px;
             scrollbar-width: thin;
@@ -500,6 +611,36 @@
             border-radius: 3px;
         }
         
+        .location-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 8px 16px;
+            color: white;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, #e91e63, #f06292);
+            border-color: rgba(233, 30, 99, 0.5);
+            transform: scale(1.05);
+        }
+        
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
         .location-card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(15px);
@@ -511,6 +652,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            position: relative;
         }
         
         .location-card:hover {
@@ -523,6 +665,39 @@
             background: linear-gradient(135deg, rgba(233, 30, 99, 0.3), rgba(240, 98, 146, 0.3));
             border-color: rgba(233, 30, 99, 0.5);
             transform: scale(1.05);
+        }
+        
+        .location-type-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .location-type-badge.together {
+            background: linear-gradient(135deg, #e91e63, #f06292);
+            color: white;
+        }
+        
+        .location-type-badge.him {
+            background: linear-gradient(135deg, #2196F3, #21CBF3);
+            color: white;
+        }
+        
+        .location-type-badge.her {
+            background: linear-gradient(135deg, #FF9800, #FFC107);
+            color: white;
+        }
+        
+        .location-type-badge.trending {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            color: white;
+            animation: pulse 2s infinite;
         }
         
         .location-icon {
@@ -565,40 +740,104 @@
             display: inline-block;
         }
         
-        /* Map pins animation */
+        .trending-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #4CAF50;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        /* Interactive Map Pins */
         .map-pin {
             position: absolute;
-            width: 30px;
-            height: 30px;
-            background: linear-gradient(135deg, #e91e63, #f06292);
-            border-radius: 50% 50% 50% 0;
-            transform: rotate(-45deg);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .map-pin.together {
+            background: linear-gradient(135deg, #e91e63, #f06292);
             animation: pinPulse 2s infinite;
         }
         
-        .map-pin::before {
+        .map-pin.him {
+            background: linear-gradient(135deg, #2196F3, #21CBF3);
+            animation: pinPulse 2s infinite 0.5s;
+        }
+        
+        .map-pin.her {
+            background: linear-gradient(135deg, #FF9800, #FFC107);
+            animation: pinPulse 2s infinite 1s;
+        }
+        
+        .map-pin.trending {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            animation: pinPulse 1.5s infinite;
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+        }
+        
+        .map-pin:hover {
+            transform: scale(1.3);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            z-index: 10;
+        }
+        
+        .map-pin.active {
+            transform: scale(1.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 15;
+        }
+        
+        .map-pin::after {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) rotate(45deg);
-            width: 12px;
-            height: 12px;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
             background: white;
             border-radius: 50%;
-        }
-        
-        .map-pin:hover {
-            transform: rotate(-45deg) scale(1.2);
-            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.6);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
         
         @keyframes pinPulse {
-            0%, 100% { transform: rotate(-45deg) scale(1); }
-            50% { transform: rotate(-45deg) scale(1.1); }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .map-tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 20;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: translateY(-40px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .map-pin:hover .map-tooltip {
+            opacity: 1;
         }
         
         @keyframes sparkleFloat {
@@ -631,6 +870,62 @@
                 width: 50px;
                 height: 50px;
                 font-size: 2rem;
+            }
+            
+            .map-header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .map-search {
+                width: 100%;
+                max-width: none;
+            }
+            
+            .map-controls {
+                justify-content: center;
+            }
+            
+            .location-filters {
+                justify-content: center;
+            }
+            
+            .filter-btn {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+            
+            .map-legend {
+                bottom: 10px;
+                left: 10px;
+                padding: 10px;
+                font-size: 0.8rem;
+            }
+            
+            .map-pin {
+                width: 30px;
+                height: 30px;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .map-title {
+                font-size: 2.2rem;
+            }
+            
+            .map-subtitle {
+                font-size: 1rem;
+            }
+            
+            .location-type-badge {
+                font-size: 0.6rem;
+                padding: 3px 6px;
+            }
+            
+            .trending-indicator {
+                font-size: 0.7rem;
             }
         }
         
@@ -1873,18 +2168,58 @@
             </div>
         </section>
 
-        <!-- Holiday Map Section -->
+        <!-- Interactive Google Maps-like Section -->
         <section class="map-section section loading" id="map">
-            <h2 class="map-title">Our Holiday Adventures 🗺️</h2>
-            <p class="map-subtitle">Places we visited together and created beautiful memories</p>
+            <h2 class="map-title">Our Love Map 🗺️</h2>
+            <p class="map-subtitle">Explore our journey together and discover trending places</p>
             
             <div class="map-container">
                 <div class="interactive-map" id="interactive-map">
-                    <!-- Map will be rendered here -->
+                    <div class="map-header">
+                        <input type="text" class="map-search" placeholder="Search locations..." id="map-search">
+                        <div class="map-controls">
+                            <button class="map-btn" onclick="resetMap()">🔄 Reset</button>
+                            <button class="map-btn" onclick="toggleTrending()">🔥 Trending</button>
+                            <button class="map-btn" onclick="zoomIn()">➕ Zoom</button>
+                        </div>
+                    </div>
+                    
+                    <div class="map-content">
+                        <div class="map-grid"></div>
+                        <div id="map-pins"></div>
+                        
+                        <div class="map-legend">
+                            <div class="legend-item">
+                                <div class="legend-marker together"></div>
+                                <span>Together</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-marker him"></div>
+                                <span>Him</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-marker her"></div>
+                                <span>Her</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-marker trending"></div>
+                                <span>Trending</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="map-locations">
-                    <div class="location-card" data-location="paris">
+                    <div class="location-filters">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="together">Together</button>
+                        <button class="filter-btn" data-filter="him">Him</button>
+                        <button class="filter-btn" data-filter="her">Her</button>
+                        <button class="filter-btn" data-filter="trending">🔥 Trending</button>
+                    </div>
+                    
+                    <div class="location-card" data-location="paris" data-type="together">
+                        <div class="location-type-badge together">Together</div>
                         <div class="location-icon">🗼</div>
                         <div class="location-info">
                             <h3>Paris, France</h3>
@@ -1893,7 +2228,8 @@
                         </div>
                     </div>
                     
-                    <div class="location-card" data-location="rome">
+                    <div class="location-card" data-location="rome" data-type="together">
+                        <div class="location-type-badge together">Together</div>
                         <div class="location-icon">🏛️</div>
                         <div class="location-info">
                             <h3>Rome, Italy</h3>
@@ -1902,7 +2238,8 @@
                         </div>
                     </div>
                     
-                    <div class="location-card" data-location="santorini">
+                    <div class="location-card" data-location="santorini" data-type="together">
+                        <div class="location-type-badge together">Together</div>
                         <div class="location-icon">🏖️</div>
                         <div class="location-info">
                             <h3>Santorini, Greece</h3>
@@ -1911,7 +2248,8 @@
                         </div>
                     </div>
                     
-                    <div class="location-card" data-location="barcelona">
+                    <div class="location-card" data-location="barcelona" data-type="him">
+                        <div class="location-type-badge him">Him</div>
                         <div class="location-icon">🏰</div>
                         <div class="location-info">
                             <h3>Barcelona, Spain</h3>
@@ -1920,12 +2258,55 @@
                         </div>
                     </div>
                     
-                    <div class="location-card" data-location="amsterdam">
+                    <div class="location-card" data-location="amsterdam" data-type="her">
+                        <div class="location-type-badge her">Her</div>
                         <div class="location-icon">🌷</div>
                         <div class="location-info">
                             <h3>Amsterdam, Netherlands</h3>
                             <p>Canals, flowers, and cozy cafes</p>
                             <span class="location-date">November 2024</span>
+                        </div>
+                    </div>
+                    
+                    <div class="location-card" data-location="tokyo" data-type="trending">
+                        <div class="location-type-badge trending">🔥 Trending</div>
+                        <div class="location-icon">🗾</div>
+                        <div class="location-info">
+                            <h3>Tokyo, Japan</h3>
+                            <p>Modern city with traditional charm</p>
+                            <span class="location-date">December 2024</span>
+                            <span class="trending-indicator">🔥 Popular Now</span>
+                        </div>
+                    </div>
+                    
+                    <div class="location-card" data-location="venice" data-type="trending">
+                        <div class="location-type-badge trending">🔥 Trending</div>
+                        <div class="location-icon">🚣</div>
+                        <div class="location-info">
+                            <h3>Venice, Italy</h3>
+                            <p>Romantic gondola rides</p>
+                            <span class="location-date">January 2025</span>
+                            <span class="trending-indicator">🔥 Popular Now</span>
+                        </div>
+                    </div>
+                    
+                    <div class="location-card" data-location="dubai" data-type="him">
+                        <div class="location-type-badge him">Him</div>
+                        <div class="location-icon">🏙️</div>
+                        <div class="location-info">
+                            <h3>Dubai, UAE</h3>
+                            <p>Luxury shopping and desert adventures</p>
+                            <span class="location-date">February 2025</span>
+                        </div>
+                    </div>
+                    
+                    <div class="location-card" data-location="bali" data-type="her">
+                        <div class="location-type-badge her">Her</div>
+                        <div class="location-icon">🌴</div>
+                        <div class="location-info">
+                            <h3>Bali, Indonesia</h3>
+                            <p>Tropical paradise and spiritual retreats</p>
+                            <span class="location-date">March 2025</span>
                         </div>
                     </div>
                 </div>
@@ -2752,44 +3133,75 @@
             }
         });
         
-        // Holiday Map functionality
+        // Interactive Google Maps-like functionality
+        let mapZoom = 1;
+        let showTrendingOnly = false;
+        let currentFilter = 'all';
+        
         function initializeMap() {
             const mapContainer = document.getElementById('interactive-map');
             const locationCards = document.querySelectorAll('.location-card');
             
-            // Map data with coordinates (approximate)
+            // Enhanced map data with coordinates and types
             const locations = {
-                paris: { x: 45, y: 35, name: 'Paris, France' },
-                rome: { x: 55, y: 55, name: 'Rome, Italy' },
-                santorini: { x: 70, y: 65, name: 'Santorini, Greece' },
-                barcelona: { x: 35, y: 60, name: 'Barcelona, Spain' },
-                amsterdam: { x: 50, y: 25, name: 'Amsterdam, Netherlands' }
+                paris: { x: 45, y: 35, name: 'Paris, France', type: 'together', icon: '🗼' },
+                rome: { x: 55, y: 55, name: 'Rome, Italy', type: 'together', icon: '🏛️' },
+                santorini: { x: 70, y: 65, name: 'Santorini, Greece', type: 'together', icon: '🏖️' },
+                barcelona: { x: 35, y: 60, name: 'Barcelona, Spain', type: 'him', icon: '🏰' },
+                amsterdam: { x: 50, y: 25, name: 'Amsterdam, Netherlands', type: 'her', icon: '🌷' },
+                tokyo: { x: 85, y: 45, name: 'Tokyo, Japan', type: 'trending', icon: '🗾' },
+                venice: { x: 60, y: 50, name: 'Venice, Italy', type: 'trending', icon: '🚣' },
+                dubai: { x: 75, y: 70, name: 'Dubai, UAE', type: 'him', icon: '🏙️' },
+                bali: { x: 80, y: 80, name: 'Bali, Indonesia', type: 'her', icon: '🌴' }
             };
             
-            // Create map background
-            mapContainer.innerHTML = `
-                <div style="position: relative; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 20px; overflow: hidden;">
-                    <div style="position: absolute; inset: 0; background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>'); opacity: 0.3;"></div>
-                    <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.6); font-size: 1rem; z-index: 1;">
-                        🗺️ Our European Adventure Map
-                    </div>
-                    <div id="map-pins" style="position: relative; width: 100%; height: 100%; z-index: 2;"></div>
-                </div>
-            `;
+            // Create map pins
+            createMapPins(locations);
             
+            // Add click events to location cards
+            locationCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const location = card.dataset.location;
+                    selectLocation(location);
+                });
+            });
+            
+            // Add filter functionality
+            setupFilters();
+            
+            // Add search functionality
+            setupSearch();
+        }
+        
+        function createMapPins(locations) {
             const pinsContainer = document.getElementById('map-pins');
+            pinsContainer.innerHTML = '';
             
-            // Create pins for each location
             Object.keys(locations).forEach(locationKey => {
                 const location = locations[locationKey];
+                
+                // Skip if filtering and location doesn't match
+                if (currentFilter !== 'all' && location.type !== currentFilter) {
+                    return;
+                }
+                
+                // Skip trending locations if not showing trending
+                if (showTrendingOnly && location.type !== 'trending') {
+                    return;
+                }
+                
                 const pin = document.createElement('div');
-                pin.className = 'map-pin';
+                pin.className = `map-pin ${location.type}`;
                 pin.style.left = location.x + '%';
                 pin.style.top = location.y + '%';
                 pin.dataset.location = locationKey;
+                pin.innerHTML = location.icon;
                 
                 // Add tooltip
-                pin.title = location.name;
+                const tooltip = document.createElement('div');
+                tooltip.className = 'map-tooltip';
+                tooltip.textContent = location.name;
+                pin.appendChild(tooltip);
                 
                 // Add click event
                 pin.addEventListener('click', () => {
@@ -2798,12 +3210,75 @@
                 
                 pinsContainer.appendChild(pin);
             });
+        }
+        
+        function setupFilters() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
             
-            // Add click events to location cards
-            locationCards.forEach(card => {
-                card.addEventListener('click', () => {
-                    const location = card.dataset.location;
-                    selectLocation(location);
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    btn.classList.add('active');
+                    
+                    // Update current filter
+                    currentFilter = btn.dataset.filter;
+                    
+                    // Filter location cards
+                    filterLocationCards();
+                    
+                    // Recreate map pins with new filter
+                    const locations = {
+                        paris: { x: 45, y: 35, name: 'Paris, France', type: 'together', icon: '🗼' },
+                        rome: { x: 55, y: 55, name: 'Rome, Italy', type: 'together', icon: '🏛️' },
+                        santorini: { x: 70, y: 65, name: 'Santorini, Greece', type: 'together', icon: '🏖️' },
+                        barcelona: { x: 35, y: 60, name: 'Barcelona, Spain', type: 'him', icon: '🏰' },
+                        amsterdam: { x: 50, y: 25, name: 'Amsterdam, Netherlands', type: 'her', icon: '🌷' },
+                        tokyo: { x: 85, y: 45, name: 'Tokyo, Japan', type: 'trending', icon: '🗾' },
+                        venice: { x: 60, y: 50, name: 'Venice, Italy', type: 'trending', icon: '🚣' },
+                        dubai: { x: 75, y: 70, name: 'Dubai, UAE', type: 'him', icon: '🏙️' },
+                        bali: { x: 80, y: 80, name: 'Bali, Indonesia', type: 'her', icon: '🌴' }
+                    };
+                    
+                    createMapPins(locations);
+                });
+            });
+        }
+        
+        function filterLocationCards() {
+            const cards = document.querySelectorAll('.location-card');
+            
+            cards.forEach(card => {
+                const cardType = card.dataset.type;
+                
+                if (currentFilter === 'all' || cardType === currentFilter) {
+                    card.style.display = 'flex';
+                    card.style.animation = 'fadeInMessage 0.5s ease forwards';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        function setupSearch() {
+            const searchInput = document.getElementById('map-search');
+            
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const cards = document.querySelectorAll('.location-card');
+                
+                cards.forEach(card => {
+                    const title = card.querySelector('h3').textContent.toLowerCase();
+                    const description = card.querySelector('p').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                        card.style.display = 'flex';
+                        card.style.animation = 'fadeInMessage 0.5s ease forwards';
+                    } else {
+                        card.style.display = 'none';
+                    }
                 });
             });
         }
@@ -2828,18 +3303,30 @@
             
             if (selectedPin) {
                 selectedPin.classList.add('active');
-                selectedPin.style.transform = 'rotate(-45deg) scale(1.3)';
-                selectedPin.style.zIndex = '10';
                 
                 // Reset after animation
                 setTimeout(() => {
-                    selectedPin.style.transform = 'rotate(-45deg) scale(1)';
-                    selectedPin.style.zIndex = '2';
-                }, 1000);
+                    selectedPin.classList.remove('active');
+                }, 2000);
             }
             
             // Add sparkle effect
             createLocationSparkles(selectedPin);
+            
+            // Show notification
+            const locations = {
+                paris: 'Paris, France',
+                rome: 'Rome, Italy',
+                santorini: 'Santorini, Greece',
+                barcelona: 'Barcelona, Spain',
+                amsterdam: 'Amsterdam, Netherlands',
+                tokyo: 'Tokyo, Japan',
+                venice: 'Venice, Italy',
+                dubai: 'Dubai, UAE',
+                bali: 'Bali, Indonesia'
+            };
+            
+            showNotification(`📍 ${locations[locationKey]} selected!`, 'info');
         }
         
         function createLocationSparkles(pin) {
@@ -2849,14 +3336,14 @@
             const rect = pin.getBoundingClientRect();
             const mapRect = document.getElementById('interactive-map').getBoundingClientRect();
             
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 8; i++) {
                 setTimeout(() => {
                     const sparkle = document.createElement('div');
                     sparkle.innerHTML = sparkles[Math.floor(Math.random() * sparkles.length)];
                     sparkle.style.position = 'absolute';
-                    sparkle.style.left = (rect.left - mapRect.left + Math.random() * 40 - 20) + 'px';
-                    sparkle.style.top = (rect.top - mapRect.top + Math.random() * 40 - 20) + 'px';
-                    sparkle.style.fontSize = '1rem';
+                    sparkle.style.left = (rect.left - mapRect.left + Math.random() * 60 - 30) + 'px';
+                    sparkle.style.top = (rect.top - mapRect.top + Math.random() * 60 - 30) + 'px';
+                    sparkle.style.fontSize = '1.2rem';
                     sparkle.style.pointerEvents = 'none';
                     sparkle.style.zIndex = '20';
                     sparkle.style.animation = 'sparkleFloat 2s ease-out forwards';
@@ -2864,7 +3351,84 @@
                     document.getElementById('interactive-map').appendChild(sparkle);
                     
                     setTimeout(() => sparkle.remove(), 2000);
-                }, i * 200);
+                }, i * 150);
+            }
+        }
+        
+        // Map control functions
+        function resetMap() {
+            currentFilter = 'all';
+            showTrendingOnly = false;
+            
+            // Reset filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
+            
+            // Reset search
+            document.getElementById('map-search').value = '';
+            
+            // Show all cards
+            document.querySelectorAll('.location-card').forEach(card => {
+                card.style.display = 'flex';
+            });
+            
+            // Recreate pins
+            const locations = {
+                paris: { x: 45, y: 35, name: 'Paris, France', type: 'together', icon: '🗼' },
+                rome: { x: 55, y: 55, name: 'Rome, Italy', type: 'together', icon: '🏛️' },
+                santorini: { x: 70, y: 65, name: 'Santorini, Greece', type: 'together', icon: '🏖️' },
+                barcelona: { x: 35, y: 60, name: 'Barcelona, Spain', type: 'him', icon: '🏰' },
+                amsterdam: { x: 50, y: 25, name: 'Amsterdam, Netherlands', type: 'her', icon: '🌷' },
+                tokyo: { x: 85, y: 45, name: 'Tokyo, Japan', type: 'trending', icon: '🗾' },
+                venice: { x: 60, y: 50, name: 'Venice, Italy', type: 'trending', icon: '🚣' },
+                dubai: { x: 75, y: 70, name: 'Dubai, UAE', type: 'him', icon: '🏙️' },
+                bali: { x: 80, y: 80, name: 'Bali, Indonesia', type: 'her', icon: '🌴' }
+            };
+            
+            createMapPins(locations);
+            
+            showNotification('🗺️ Map reset!', 'success');
+        }
+        
+        function toggleTrending() {
+            showTrendingOnly = !showTrendingOnly;
+            
+            if (showTrendingOnly) {
+                document.querySelector('.map-btn[onclick="toggleTrending()"]').textContent = '🌍 All';
+                showNotification('🔥 Showing trending places only!', 'info');
+            } else {
+                document.querySelector('.map-btn[onclick="toggleTrending()"]').textContent = '🔥 Trending';
+                showNotification('🌍 Showing all places!', 'info');
+            }
+            
+            // Recreate pins
+            const locations = {
+                paris: { x: 45, y: 35, name: 'Paris, France', type: 'together', icon: '🗼' },
+                rome: { x: 55, y: 55, name: 'Rome, Italy', type: 'together', icon: '🏛️' },
+                santorini: { x: 70, y: 65, name: 'Santorini, Greece', type: 'together', icon: '🏖️' },
+                barcelona: { x: 35, y: 60, name: 'Barcelona, Spain', type: 'him', icon: '🏰' },
+                amsterdam: { x: 50, y: 25, name: 'Amsterdam, Netherlands', type: 'her', icon: '🌷' },
+                tokyo: { x: 85, y: 45, name: 'Tokyo, Japan', type: 'trending', icon: '🗾' },
+                venice: { x: 60, y: 50, name: 'Venice, Italy', type: 'trending', icon: '🚣' },
+                dubai: { x: 75, y: 70, name: 'Dubai, UAE', type: 'him', icon: '🏙️' },
+                bali: { x: 80, y: 80, name: 'Bali, Indonesia', type: 'her', icon: '🌴' }
+            };
+            
+            createMapPins(locations);
+        }
+        
+        function zoomIn() {
+            mapZoom = mapZoom === 1 ? 1.2 : 1;
+            const mapContent = document.querySelector('.map-content');
+            mapContent.style.transform = `scale(${mapZoom})`;
+            mapContent.style.transition = 'transform 0.3s ease';
+            
+            if (mapZoom > 1) {
+                showNotification('🔍 Map zoomed in!', 'info');
+            } else {
+                showNotification('🔍 Map zoomed out!', 'info');
             }
         }
 
