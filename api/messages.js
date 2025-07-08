@@ -1,8 +1,15 @@
 import fs from 'fs';
 import path from 'path';
+import { Index } from "@upstash/vector";
 
-// File path for persistent storage
+// File path for persistent storage (backup)
 const MESSAGES_FILE = path.join(process.cwd(), 'messages.json');
+
+// Upstash Vector Database
+const index = new Index({
+  url: "https://tender-asp-12545-us1-vector.upstash.io",
+  token: "ABQFMHRlbmRlci1hc3AtMTI1NDUtdXMxYWRtaW5ZelV4TnpVNVpXUXRZV1k1T0MwME1EQm1MV0ZsWkRJdE5qQTJOekV5T0dNMVl6azQ=",
+});
 
 // Initialize messages file if it doesn't exist
 function initializeMessagesFile() {
@@ -11,7 +18,7 @@ function initializeMessagesFile() {
   }
 }
 
-// Read messages from file
+// Read messages from file (backup)
 function readMessagesFromFile() {
   try {
     initializeMessagesFile();
@@ -23,7 +30,7 @@ function readMessagesFromFile() {
   }
 }
 
-// Write messages to file
+// Write messages to file (backup)
 function writeMessagesToFile(messages) {
   try {
     fs.writeFileSync(MESSAGES_FILE, JSON.stringify(messages, null, 2));
@@ -32,6 +39,56 @@ function writeMessagesToFile(messages) {
     console.error('Error writing messages file:', error);
     return false;
   }
+}
+
+// Try to get messages from Upstash, fallback to file
+async function getMessagesFromDatabase() {
+  try {
+    console.log('Attempting to fetch messages from Upstash...');
+    const result = await index.fetch(['messages_list']);
+    console.log('Upstash fetch result:', result);
+    
+    if (result && result.length > 0 && result[0].metadata) {
+      const messages = result[0].metadata.messages || [];
+      console.log('Retrieved messages from Upstash:', messages.length);
+      
+      // Also save to file as backup
+      writeMessagesToFile(messages);
+      
+      return messages;
+    }
+  } catch (upstashError) {
+    console.error('Upstash error, using file backup:', upstashError);
+  }
+  
+  // Fallback to file storage
+  const fileMessages = readMessagesFromFile();
+  console.log('Using file storage, messages count:', fileMessages.length);
+  return fileMessages;
+}
+
+// Save messages to both Upstash and file
+async function saveMessagesToDatabase(messages) {
+  let savedToUpstash = false;
+  
+  // Try to save to Upstash first
+  try {
+    await index.upsert({
+      id: 'messages_list',
+      data: 'chat messages',
+      metadata: { messages: messages }
+    });
+    console.log('Messages saved to Upstash successfully');
+    savedToUpstash = true;
+  } catch (upstashError) {
+    console.error('Failed to save to Upstash:', upstashError);
+  }
+  
+  // Always save to file as backup
+  writeMessagesToFile(messages);
+  console.log('Messages saved to file backup');
+  
+  return savedToUpstash;
 }
 
 export default async function handler(req, res) {
@@ -49,18 +106,18 @@ export default async function handler(req, res) {
   
   // Add a simple health check endpoint
   if (req.url === '/api/messages/health') {
+    const messages = await getMessagesFromDatabase();
     return res.status(200).json({ 
       status: 'ok', 
       timestamp: new Date().toISOString(),
-      messagesCount: readMessagesFromFile().length
+      messagesCount: messages.length
     });
   }
   
   if (req.method === 'GET') {
     try {
       console.log('GET request - fetching messages...');
-      const messages = readMessagesFromFile();
-      console.log('Retrieved messages from file:', messages.length);
+      const messages = await getMessagesFromDatabase();
       res.status(200).json(messages);
       
     } catch (error) {
@@ -74,8 +131,8 @@ export default async function handler(req, res) {
       const { action, message, messageId } = req.body;
       console.log('POST action:', action, 'message:', message, 'messageId:', messageId);
       
-      // Get current messages from file
-      let messages = readMessagesFromFile();
+      // Get current messages from database
+      let messages = await getMessagesFromDatabase();
       
       if (action === 'add') {
         const newMessage = {
@@ -88,13 +145,9 @@ export default async function handler(req, res) {
         messages.push(newMessage);
         console.log('Adding message:', newMessage);
         
-        // Save to file
-        if (writeMessagesToFile(messages)) {
-          console.log('Message saved to file successfully');
-          res.status(200).json({ success: true, messages });
-        } else {
-          res.status(500).json({ error: 'Failed to save message to file' });
-        }
+        // Save to both database and file
+        await saveMessagesToDatabase(messages);
+        res.status(200).json({ success: true, messages });
         
       } else if (action === 'edit') {
         const messageIndex = messages.findIndex(msg => msg.id === messageId);
@@ -102,12 +155,9 @@ export default async function handler(req, res) {
           messages[messageIndex].text = message.text;
           messages[messageIndex].editedAt = new Date().toISOString();
           
-          if (writeMessagesToFile(messages)) {
-            console.log('Message updated in file successfully');
-            res.status(200).json({ success: true, messages });
-          } else {
-            res.status(500).json({ error: 'Failed to update message in file' });
-          }
+          await saveMessagesToDatabase(messages);
+          console.log('Message updated successfully');
+          res.status(200).json({ success: true, messages });
         } else {
           res.status(404).json({ error: 'Message not found' });
         }
@@ -117,24 +167,18 @@ export default async function handler(req, res) {
         messages = messages.filter(msg => msg.id !== messageId);
         
         if (messages.length < originalLength) {
-          if (writeMessagesToFile(messages)) {
-            console.log('Message deleted from file successfully');
-            res.status(200).json({ success: true, messages });
-          } else {
-            res.status(500).json({ error: 'Failed to delete message from file' });
-          }
+          await saveMessagesToDatabase(messages);
+          console.log('Message deleted successfully');
+          res.status(200).json({ success: true, messages });
         } else {
           res.status(404).json({ error: 'Message not found' });
         }
         
       } else if (action === 'clear') {
         // Clear all messages
-        if (writeMessagesToFile([])) {
-          console.log('All messages cleared from file successfully');
-          res.status(200).json({ success: true, messages: [] });
-        } else {
-          res.status(500).json({ error: 'Failed to clear messages from file' });
-        }
+        await saveMessagesToDatabase([]);
+        console.log('All messages cleared successfully');
+        res.status(200).json({ success: true, messages: [] });
         
       } else {
         res.status(400).json({ error: 'Invalid action' });
@@ -145,5 +189,4 @@ export default async function handler(req, res) {
       res.status(500).json({ error: 'Failed to handle message: ' + error.message });
     }
   }
-} 
 } 
