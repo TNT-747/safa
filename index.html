@@ -1712,7 +1712,7 @@
     <!-- Navigation Bar -->
     <nav class="navbar" id="navbar" style="display: none;">
         <div class="nav-container">
-            <div class="nav-logo" >S&A</div>
+            <div class="nav-logo">S&A</div>
             <ul class="nav-menu" id="nav-menu">
                 <li class="nav-item">
                     <a href="#home" class="nav-link active">Home</a>
@@ -2057,8 +2057,6 @@
                    document.getElementById('password-container').style.display = 'none';
                    document.getElementById('messages-content').style.display = 'block';
                    await loadMessages();
-                   showMessages();
-                   updateProgressBar();
                 }, 500);
                 
                 errorMsg.textContent = '';
@@ -2082,7 +2080,6 @@
                 document.getElementById('password-container').style.display = 'none';
                 document.getElementById('messages-content').style.display = 'block';
                 await loadMessages();
-                showMessages();
                 errorMsg.textContent = '';
             } else {
                 errorMsg.textContent = '❌ Incorrect password. Try again!';
@@ -2321,34 +2318,46 @@
         saveToDatabase();
     }
     
-    // Load messages from database
-    async function loadMessages() {
-        try {
-            console.log('Attempting to load messages from database...');
-            const response = await fetch('/api/messages');
-            console.log('Load response status:', response.status);
-            
-            if (response.ok) {
-                allMessages = await response.json();
-                console.log('Messages loaded from database:', allMessages.length);
-            } else {
-                throw new Error(`API responded with status: ${response.status}`);
-            }
-        } catch (error) {
-            console.error('Error loading messages from database:', error);
-            console.log('Falling back to localStorage...');
-            
-            // Fallback to localStorage
-            const savedMessages = localStorage.getItem('chatMessages');
-            if (savedMessages) {
-                allMessages = JSON.parse(savedMessages);
-                console.log('Messages loaded from localStorage:', allMessages.length);
-            } else {
-                console.log('No messages found in localStorage either');
-                allMessages = [];
+            // Load messages from database
+        async function loadMessages() {
+            try {
+                console.log('Attempting to load messages from database...');
+                const response = await fetch('/api/messages');
+                console.log('Load response status:', response.status);
+                
+                if (response.ok) {
+                    allMessages = await response.json();
+                    console.log('Messages loaded from database:', allMessages.length);
+                    
+                    // Update display if messages section is unlocked
+                    if (messagesUnlocked) {
+                        showMessages();
+                        updateProgressBar();
+                    }
+                } else {
+                    throw new Error(`API responded with status: ${response.status}`);
+                }
+            } catch (error) {
+                console.error('Error loading messages from database:', error);
+                console.log('Falling back to localStorage...');
+                
+                // Fallback to localStorage
+                const savedMessages = localStorage.getItem('chatMessages');
+                if (savedMessages) {
+                    allMessages = JSON.parse(savedMessages);
+                    console.log('Messages loaded from localStorage:', allMessages.length);
+                } else {
+                    console.log('No messages found in localStorage either');
+                    allMessages = [];
+                }
+                
+                // Update display if messages section is unlocked
+                if (messagesUnlocked) {
+                    showMessages();
+                    updateProgressBar();
+                }
             }
         }
-    }
     
     // Save to database
     async function saveToDatabase() {
@@ -2393,6 +2402,9 @@
                 setTimeout(() => {
                     btn.style.transform = '';
                 }, 150);
+                
+                // Show success notification
+                showNotification('Message sent! 💕', 'success');
                 
             }, 800);
         }
@@ -2864,15 +2876,26 @@
                 document.getElementById('site-password-input').focus();
             }
             
-            // Load saved messages for when site is unlocked
-            loadMessages();
+            // Calculate total weeks
             totalWeeks = calculateTotalWeeks();
+            
+            // Pre-load messages in background (but don't display yet)
+            setTimeout(() => {
+                loadMessages();
+            }, 1000);
         });
         
         // Enhanced click interactions
         document.addEventListener('click', function(e) {
             createClickEffect(e.clientX, e.clientY);
         });
+        
+        // Refresh messages every 30 seconds to keep them up to date
+        setInterval(async () => {
+            if (messagesUnlocked) {
+                await loadMessages();
+            }
+        }, 30000);
         
         // Add some interactive hover effects
         document.querySelectorAll('.time-unit').forEach(unit => {
@@ -2917,16 +2940,19 @@
                         showMessages();
                         updateProgressBar();
                         console.log('Message added successfully to database');
+                        return true;
                     }
                 } else {
                     console.error('API response not ok:', response.status, response.statusText);
                     // Fallback: add to local storage
                     addMessageToLocalStorage(sender, text);
+                    return false;
                 }
             } catch (error) {
                 console.error('Error adding message:', error);
                 // Fallback: add to local storage
                 addMessageToLocalStorage(sender, text);
+                return false;
             }
         }
         
@@ -2937,7 +2963,7 @@
                 id: Date.now().toString(),
                 sender: sender,
                 text: text,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toLocaleString()
             };
             
             allMessages.push(newMessage);
@@ -2947,6 +2973,9 @@
             // Save to localStorage
             localStorage.setItem('chatMessages', JSON.stringify(allMessages));
             console.log('Message saved to localStorage');
+            
+            // Show notification
+            showNotification('Message saved locally! 💕', 'info');
         }
         
         async function updateMessageInDatabase(messageId, newText) {
